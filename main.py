@@ -7,6 +7,8 @@ class Segment:
         self.start_x = start_x
         self.start_y = start_y
         self.angle = angle
+    def __str__(self):
+        return f"X: {self.start_x} Y: {self.start_y} Angle: {self.angle}"
 
 class Source:
     def __init__(self, x, y, angle):
@@ -29,9 +31,11 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
 class Screen:
     ray_sources = []
     ray_interactors = []
-    def __init__(self):
+    def __init__(self, canvas_width=700, canvas_height=400):
         self.tk_frame = Frame()
-        self.tk_canvas = Canvas(master=self.tk_frame, bg="#DDDDDD", width=700, height=400)
+        self.canvas_width = canvas_width
+        self.canvas_height = canvas_height
+        self.tk_canvas = Canvas(master=self.tk_frame, bg="#DDDDDD", width=self.canvas_width, height=self.canvas_height)
         self.tk_canvas.grid()
     def solve_collisions(self):
         for source in self.ray_sources:
@@ -39,13 +43,23 @@ class Screen:
             #TODO Add some debug print statements maybe
     def draw_all(self):
         for source in self.ray_sources:
-            generated_segments = source.generated_segments
-            for i in range(len(generated_segments) - 1): #All but the final segment have a next segment to latch onto as their end point
-                self.tk_canvas.create_line(generated_segments[i].start_x, generated_segments[i].start_y, generated_segments[i+1].start_x, generated_segments[i+1].start_y)
-            #Finally, the final segment is handled seperately
+            for segment in source.generated_segments:
+                if debug_level >= 2:
+                    print(f"Drawing line for segment {segment}")
+                    print(f"Tangens = {tan(radians(segment.angle))}")
+                if segment.angle < 90:
+                    end_x = self.canvas_width
+                    end_y = segment.start_y + (self.canvas_width-segment.start_x) * tan(radians(segment.angle))
+                if segment.angle == 90:
+                    end_x = segment.start_x
+                    end_y = self.canvas_height
+                if segment.angle > 90:
+                    end_x = 0
+                self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill="black")
 
 load_debug_screen = True
 load_extra_debug_screens = True
+debug_level = 2
 
 root = Tk()
 root.title("Ray optics tool")
@@ -60,7 +74,8 @@ if load_debug_screen == True:
     ntb_Screens.add(startup_Screen.tk_frame, text="Debug Screen")
 
     #Populating it with objects
-    startup_Screen.ray_sources.append(Source(100, 100, 22.5))
+    for n in range(15):
+        startup_Screen.ray_sources.append(Source(100, 100, 22.5*n))
     #startup_Screen.ray_interactors.append(Glass_Rectangle())
     startup_Screen.solve_collisions()
     startup_Screen.draw_all()
