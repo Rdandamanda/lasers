@@ -49,11 +49,11 @@ class Screen:
                     print(f"Tangens = {tan(radians(segment.angle))}")
                 if segment.angle < 90:
                     end_x = self.canvas_width
-                    end_y = segment.start_y + (self.canvas_width-segment.start_x) * tan(radians(segment.angle))
+                end_y = segment.start_y + (self.canvas_width-segment.start_x) * tan(radians(segment.angle))
                 if segment.angle == 90:
                     end_x = segment.start_x
                     end_y = self.canvas_height
-                if segment.angle > 90:
+                if segment.angle >= 90 and segment.angle <= 270:
                     end_x = 0
                 self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill="black")
 
