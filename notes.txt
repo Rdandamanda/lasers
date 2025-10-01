@@ -1,5 +1,0 @@
-notes:
-I was going to make each ray source keep an unordered set of ray segments, but I'll make it a list instead, because I came up with a solution that takes care of multiple potential problems at once.
-For each source, there will be one initial segment in the list. Iteration will start there. It will keep an index of where it is currently at in the list. If a new segment is added or even the beam splits into multiple beams and thus multiple segments are added, they are added to the end of the list.
-Iteration keeps going as long as there are new segments left in the list. Once every segment goes off into space colliding with nothing, thus making no new segments appear at the end of the list, the index reaches the end, which is detected with an if-statement, and the simulation is considered done.
-I think this'll look visually appealing too if it's slowed down and it'll look like it's crawling through a tree of reflection but it's just emergent behaviour from the list. I think I could say segments are being added in order by layer, by how many segemnts are connected before them, by their rank.
