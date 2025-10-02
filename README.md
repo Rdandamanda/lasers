@@ -3,7 +3,7 @@ Forma zpracování: Offline desktopová aplikace napsaná v Pythonu, GUI vytvoř
 Veškerá simulace probíhá ve 2D prostoru (ne 3D)
 
 ## **Simulace paprskové optiky pro výuku**
-
+**Hlavní cíl:** Offline desktopová aplikace v Pythonu s GUI, která bude simulovat parpskovou optiku
 Cíle:
 - Simulace paprskové optiky
   - Chování paprsku podle zákona odrazu a Snellova zákona o lomu paprsku
