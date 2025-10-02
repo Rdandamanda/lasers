@@ -30,5 +30,6 @@
 - Do 26. 1.: Vytvoření kostry dokumentace s minimálně polovinou plánovaného obsahu. V této fázi nebude kladen důraz na stylistiku a vizuální zpracování
 - Do 1. 3.: Dokumentace hotová, konzultace posledních stylistických úprav
 
-> ```Zadání sepsáno 1. 10. 2025
-Upraveno 2. 10. 2025```
+> Zadání sepsáno 1. 10. 2025
+> 
+> Upraveno 2. 10. 2025
