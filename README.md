@@ -1,6 +1,6 @@
 # Simulace 2D paprskové optiky
-### Hlavní cíl: Offline desktopová aplikace v Pythonu s grafickým rozhraním pro simulaci 2D paprskové optiky pro výuku
-### Rozepsané cíle:
+#### Hlavní cíl: Offline desktopová aplikace v Pythonu s grafickým rozhraním pro simulaci 2D paprskové optiky pro výuku
+#### Rozepsané cíle:
 - **Simulace paprskové optiky**
   - Chování paprsku podle zákona odrazu a Snellova zákona o lomu paprsku
   - Optické prvky: Obdélník ze skla, hranol, zrcadlo, spojná čočka a rozptylka, obdélníková překážka blokující světlo, zdroj paprsku
