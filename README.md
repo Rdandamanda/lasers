@@ -2,6 +2,8 @@ Simulace paprskové optiky s GUI, s využitím jako učební pomůcka
 Forma zpracování: Offline desktopová aplikace napsaná v Pythonu, GUI vytvořené pomocí Tkinter knihovny
 Veškerá simulace probíhá ve 2D prostoru (ne 3D)
 
+## **Simulace paprskové optiky pro výuku**
+
 Cíle:
 - Simulace paprskové optiky
   - Chování paprsku podle zákona odrazu a Snellova zákona o lomu paprsku
