@@ -54,7 +54,7 @@ class Screen:
                     print(f"Tangens = {tan(radians(segment.degrees))}")
                 if segment.degrees < 90:
                     end_x: int = self.canvas_width
-                end_y: int = segment.start_y + (self.canvas_width-segment.start_x) * tan(radians(segment.angle))
+                end_y: int = segment.start_y + (self.canvas_width-segment.start_x) * tan(radians(segment.degrees))
                 if segment.degrees == 90:
                     end_x: int = segment.start_x
                     end_y: int = self.canvas_height
