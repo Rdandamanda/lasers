@@ -26,7 +26,11 @@ class Interactor:
         return f"Collision of a ray {ray_source} with interactor {self}" #TODO: There is literally nothing here, also this should be a __string__() function
 
 class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
-    pass
+    def __init__(self, x0, y0, x1, y1):
+        self.x0 = x0
+        self.y0 = y0
+        self.x1 = x1
+        self.y1 = y1
 
 class Screen:
     ray_sources = []
@@ -47,15 +51,47 @@ class Screen:
                 if debug_level >= 2:
                     print(f"Drawing line for segment {segment}")
                     print(f"Tangens = {tan(radians(segment.angle))}")
-                if segment.angle < 90:
+                #TODO: Make just one case (and maybe edge cases) and use modulo 90° and 
+                if segment.angle >= 360:
+                    if debug_level >= 2:
+                        print(f"WARN: Segment's angle is high: {segment.angle}")
+                if segment.angle == 0:
                     end_x = self.canvas_width
-                end_y = segment.start_y + (self.canvas_width-segment.start_x) * tan(radians(segment.angle))
-                if segment.angle == 90:
+                    end_y = segment.start_y
+                elif segment.angle == 90:
                     end_x = segment.start_x
                     end_y = self.canvas_height
-                if segment.angle >= 90 and segment.angle <= 270:
+                elif segment.angle == 180:
                     end_x = 0
+                    end_y = segment.start_y
+                elif segment.angle == 270:
+                    end_x = segment.start_x
+                    end_y = 0
+                elif segment.angle < 90:
+                    end_x = self.canvas_width
+                    dx = self.canvas_width - segment.start_x
+                    dy = tan(radians(segment.angle)) * dx
+                    end_y = segment.start_y + dy
+                elif segment.angle < 180:
+                    end_x = 0
+                    dx = segment.start_x
+                    dy = -tan(radians(segment.angle)) * dx
+                    end_y = segment.start_y + dy
+                elif segment.angle < 270:
+                    end_x = 0
+                    dx = segment.start_x
+                    dy = tan(radians(segment.angle)) * dx
+                    end_y = segment.start_y - dy
+                elif segment.angle < 360:
+                    print("all")
+                    end_x = self.canvas_width
+                    dx = self.canvas_width - segment.start_x
+                    dy = -tan(radians(segment.angle)) * dx
+                    end_y = segment.start_y - dy
+                
+                print(f"Creating line to X: {end_x} Y: {end_y}")
                 self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill="black")
+                #self.tk_canvas.create_line(300, 100, 0, 100, fill="black")
 
 load_debug_screen = True
 load_extra_debug_screens = True
@@ -74,8 +110,9 @@ if load_debug_screen == True:
     ntb_Screens.add(startup_Screen.tk_frame, text="Debug Screen")
 
     #Populating it with objects
-    for n in range(15):
-        startup_Screen.ray_sources.append(Source(100, 100, 22.5*n))
+    for n in range(16):
+        startup_Screen.ray_sources.append(Source(300, 140, (180+22.5*n)%360))
+    startup_Screen.ray_interactors.append(Glass_Rectangle(200, 200, 500, 400))
     #startup_Screen.ray_interactors.append(Glass_Rectangle())
     startup_Screen.solve_collisions()
     startup_Screen.draw_all()
