@@ -25,12 +25,15 @@ Různé extra informace k tomu, jak některé věci chci udělat jsou dostupné 
 Sepsáno 1. 10. 2025
 
 Předběžný časový plán:
-- Do 31. 10.: OOP základ programu. Základ simulace - zdroj paprsku, cesta paprsku prostorem a jeho interakce s jednoduššími prvky - skleněný obdélník, zrcadlo, obdélníková překážka. Renderování paprsku na obrazovku. Vše zatím zadáváno přímo do kódu programu, GUI je zatím jen na renderování výsledku
-- Do 24. 11.: GUI - Přidávání věcí na obrazovku pomocí GUI, možnost vybrat prvek myší a přesunout ho a změnit jeho nastavení, pokud nějaké má
-- Do 31. 12.: Dodělání chybějících věcí: Ukládání do souboru, načítání ze souboru. Zbylé prvky - čočky a hranol. Scrollování plochy, vyladění zobrazování. Vyřešení jakýchkoli vzniklých problémů s GUI, vyladění GUI
-- Po 31. 12. 2025: Vyřešení jakýchkoli problémů, testování abych našel a odstranil bugy. Přidávání další funkčnosti, pokud bude čas. Tvorba ukázkových demo souborů, pokud bude čas
+- Do 24. 11. 2025 (1. kontrola): OOP základ programu. Základ simulace - zdroj paprsku, cesta paprsku prostorem a jeho interakce s jednoduššími prvky - skleněný obdélník, zrcadlo, obdélníková překážka. Renderování paprsku na obrazovku. Vše zatím zadáváno přímo do kódu programu, GUI je zatím jen na renderování výsledku
+- Do 12. 12. 2025: GUI - Přidávání věcí na obrazovku pomocí GUI, možnost vybrat prvek myší a přesunout ho
+- Do 31. 12. 2025: GUI - možnost přes GUI změnit nastavení (velikost, úhel, index lomu...) prvku vybraného myší, pokud nějaké má
+- Do 26. 1. 2026 (2. kontrola): Dodělání chybějících věcí: Ukládání do souboru, načítání ze souboru. Zbylé prvky - čočky a hranol. Cíl mít něco, co funguje
+- Do 12. 2. 2026: Scrollování plochy, vyladění zobrazování. Vyřešení jakýchkoli vzniklých problémů s GUI, vyladění GUI
+- Po 12. 2. 2026: Vyřešení jakýchkoli problémů, testování abych našel a odstranil bugy. Přidávání další funkčnosti, pokud bude čas. Tvorba ukázkových demo souborů, pokud bude čas
 
 Dokumentace:
-- Do 26. 1.: Kostra dokumentu. Bude obsahovat nejméně polovinu informací, co tam chci, ale zatím nebudu hrotit formulaci a vizuální zpracování
+- Do 12. 2. 2026: Kostra dokumentu. Bude obsahovat nejméně polovinu informací, co tam chci, ale zatím nebudu hrotit formulaci a vizuální zpracování
 
-- Do 1. 3.: Dokumentace hotová, konzultace o formulacích (s formulacemi textu mám problémy)
+- Do 1. 3. 2026: Dokumentace hotová, konzultace o formulacích (s formulacemi textu mám problémy)
+
