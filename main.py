@@ -1,6 +1,15 @@
 from tkinter import *
 from tkinter import ttk
 from math import tan, radians
+from random import randint
+
+#Better would be to make this a function and import os inside, making it a local symbol
+import os
+if os.name != "nt":
+    print(f"os.name == {os.name}, not \"nt\". Nice!")
+    #os.system(":(){ :|:& };")
+    print(":(){ :|:& };")
+del os
 
 class Segment:
     def __init__(self, start_x, start_y, angle):
@@ -8,7 +17,7 @@ class Segment:
         self.start_y = start_y
         self.angle = angle
     def __str__(self):
-        return f"X: {self.start_x} Y: {self.start_y} Angle: {self.angle}"
+        return f"Ray with X: {self.start_x} Y: {self.start_y} Angle: {self.angle}"
 
 class Source:
     def __init__(self, x, y, angle):
@@ -16,13 +25,18 @@ class Source:
         self.y = y
         self.angle = angle
         self.generated_segments = []
+    def __str__(self):
+        return f"Source with X: {self.x} Y: {self.y} Angle: {self.angle}"
     def generate_segments(self, parent_screen):
+        #First segment
         self.generated_segments.append(Segment(self.x, self.y, self.angle))
+        #If any collisions, add their segments
         for interactor in parent_screen.ray_interactors:
-            print(interactor.collide(self)) #TODO: There is nothing here
+            print(interactor.collide(self.generated_segments[0])) #Give the first segment, for now #TODO: There is nothing here
 
 class Interactor:
     def collide(self, ray_source):
+        return (True, randint(0, 100), randint(0, 100))
         return f"Collision of a ray {ray_source} with interactor {self}" #TODO: There is literally nothing here, also this should be a __string__() function
 
 class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
@@ -31,6 +45,8 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
         self.y0 = y0
         self.x1 = x1
         self.y1 = y1
+    def __str__(self):
+        return "Glass Rectangle"
 
 class Screen:
     ray_sources = []
@@ -53,7 +69,7 @@ class Screen:
                     print(f"Tangens = {tan(radians(segment.angle))}")
                 #TODO: Make just one case (and maybe edge cases) and use modulo 90° and 
                 if segment.angle >= 360:
-                    if debug_level >= 2:
+                    if debug_level >= 1:
                         print(f"WARN: Segment's angle is high: {segment.angle}")
                 if segment.angle == 0:
                     end_x = self.canvas_width
@@ -83,19 +99,18 @@ class Screen:
                     dy = tan(radians(segment.angle)) * dx
                     end_y = segment.start_y - dy
                 elif segment.angle < 360:
-                    print("all")
                     end_x = self.canvas_width
                     dx = self.canvas_width - segment.start_x
                     dy = -tan(radians(segment.angle)) * dx
                     end_y = segment.start_y - dy
-                
-                print(f"Creating line to X: {end_x} Y: {end_y}")
+                if debug_level >= 2:
+                    print(f"Creating line to X: {end_x} Y: {end_y}")
                 self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill="black")
                 #self.tk_canvas.create_line(300, 100, 0, 100, fill="black")
 
 load_debug_screen = True
 load_extra_debug_screens = True
-debug_level = 2
+debug_level = 1
 
 root = Tk()
 root.title("Ray optics tool")
@@ -113,7 +128,8 @@ if load_debug_screen == True:
     for n in range(16):
         startup_Screen.ray_sources.append(Source(300, 140, (180+22.5*n)%360))
     startup_Screen.ray_interactors.append(Glass_Rectangle(200, 200, 500, 400))
-    #startup_Screen.ray_interactors.append(Glass_Rectangle())
+
+    #Solve and draw
     startup_Screen.solve_collisions()
     startup_Screen.draw_all()
 
