@@ -35,4 +35,4 @@
 > Zadání sepsáno 1. 10. 2025
 > 
 > Upraveno 2. 10. 2025
-> Upraveno 30. 10 .2025
+> Upraveno 30. 10. 2025
