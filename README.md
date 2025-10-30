@@ -21,15 +21,18 @@
 > Doplňující informace k tomu, jak plánuji některé části řešit, jsou dostupné v mých veřejných poznámkách na [GitHub Projects](https://github.com/users/Rdandamanda/projects/1/views/1). Jsou to pouze orientační poznámky, co jsem si napsal před začátkem práce. Závazné zadání je obsaženo výhradně v tomto souboru
 
 ### Předběžný časový plán projektu:
-- Do 31. 10.: Vytvoření OOP struktury. Základ simulace - zdroj paprsku, cesta paprsku prostorem a jeho interakce s jednoduššími prvky: skleněný obdélník, zrcadlo, obdélníková překážka. Renderování paprsku na obrazovku. Simulace je zatím nastavena staticky v kódu a GUI v tuto chvíli slouží pouze k zobrazení výsledku.
-- Do 24. 11.: GUI - Přidávání prvků na plochu pomocí GUI, možnost je myší vybírat, přesouvat a upravovat jejich vlastnosti (pokud nějaké mají)
-- Do 31. 12.: Dodělání chybějících věcí: Ukládání do souboru, načítání ze souboru. Zbylé prvky - čočky a hranol. Scrollování plochy, vyladění zobrazování. Odstranění případných problémů s GUI a jeho celkové doladění
-- Po 31. 12. 2025: Testování aplikace a odstranění nalezených chyb. V případě časové rezervy rozšíření programu o doplňkové funkce a vytvoření ukázkových demo scénářů
+- Do 24. 11. 2025 (1. kontrola): Vytvoření OOP struktury. Základ simulace - zdroj paprsku, cesta paprsku prostorem a jeho interakce s jednoduššími prvky: skleněný obdélník, zrcadlo, obdélníková překážka. Renderování paprsku na obrazovku. Simulace je zatím nastavena staticky v kódu a GUI v tuto chvíli slouží pouze k zobrazení výsledku
+- Do 12. 12. 2025: GUI - Přidávání prvků na plochu pomocí GUI, možnost je myší vybírat a přesouvat
+- Do 31. 12. 2025: GUI - Možnost přes GUI upravovat vlastnosti (velikost, úhel, index lomu...) prvku vybraného myší, pokud nějaké má
+- Do 26. 1. 2026 (2. kontrola): Dodělání chybějících věcí: Ukládání do souboru, načítání ze souboru. Zbylé prvky - čočky a hranol. Cíl mít něco, co funguje
+- Do 12. 2. 2026: Scrollování plochy, vyladění zobrazování. Odstranění případných problémů s GUI a jeho celkové doladění
+- Po 12. 2. 2026: Testování aplikace a odstranění nalezených chyb. V případě časové rezervy rozšíření programu o doplňkové funkce a vytvoření ukázkových demo scénářů
 
 ### Předběžný časový plán dokumentace:
-- Do 26. 1.: Vytvoření kostry dokumentace s minimálně polovinou plánovaného obsahu. V této fázi nebude kladen důraz na stylistiku a vizuální zpracování
-- Do 1. 3.: Dokumentace hotová, konzultace posledních stylistických úprav
+- Do 12. 2. 2026: Vytvoření kostry dokumentace s minimálně polovinou plánovaného obsahu. V této fázi nebude kladen důraz na stylistiku a vizuální zpracování
+- Do 1. 3. 2026: Dokumentace hotová, konzultace posledních stylistických úprav
 
 > Zadání sepsáno 1. 10. 2025
 > 
 > Upraveno 2. 10. 2025
+> Upraveno 30. 10 .2025
