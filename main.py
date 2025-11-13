@@ -35,7 +35,7 @@ class Source:
             print(interactor.collide(self.generated_segments[0])) #Give the first segment, for now #TODO: There is nothing here
 
 class Interactor:
-    def collide(self, ray_source):
+    def collide(self, ray_source) -> tuple[bool, int, int]:
         return (True, randint(0, 100), randint(0, 100))
         return f"Collision of a ray {ray_source} with interactor {self}" #TODO: There is literally nothing here, also this should be a __string__() function
 
@@ -114,6 +114,21 @@ debug_level = 1
 
 root = Tk()
 root.title("Ray optics tool")
+
+VSync = True
+currentcolour = True
+def switchwindows():
+    global currentcolour
+    if currentcolour:
+        startup_Screen.tk_canvas.configure(bg="black")
+        currentcolour = not currentcolour
+    else:
+        startup_Screen.tk_canvas.configure(bg="yellow")
+        currentcolour = not currentcolour
+    root.geometry(f"700x400+{int(randint(10, 500))}+{int(randint(10, 200))}")
+    root.after(20, switchwindows)
+
+root.after(20, switchwindows)
 
 ntb_Screens = ttk.Notebook()
 ntb_Screens.grid()
