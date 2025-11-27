@@ -47,6 +47,9 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
         self.y1 = y1
     def __str__(self):
         return "Glass Rectangle"
+    def collide(self, ray_source) -> tuple[bool, int, int]:
+
+        return (True, randint(0, 100), randint(0, 1)) #(isCollided, x, y)
 
 class Screen:
     ray_sources = []
@@ -105,8 +108,10 @@ class Screen:
                     end_y = segment.start_y - dy
                 if debug_level >= 2:
                     print(f"Creating line to X: {end_x} Y: {end_y}")
-                self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill="black")
+                self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill="blue")
                 #self.tk_canvas.create_line(300, 100, 0, 100, fill="black")
+        for interactor in self.ray_interactors:
+            self.tk_canvas.create_rectangle(interactor.x0, interactor.y0, interactor.x1, interactor.y1, fill="#9bc8d1", outline="#aad9e3", width=2)
 
 load_debug_screen = True
 load_extra_debug_screens = True
@@ -114,21 +119,6 @@ debug_level = 1
 
 root = Tk()
 root.title("Ray optics tool")
-
-VSync = True
-currentcolour = True
-def switchwindows():
-    global currentcolour
-    if currentcolour:
-        startup_Screen.tk_canvas.configure(bg="black")
-        currentcolour = not currentcolour
-    else:
-        startup_Screen.tk_canvas.configure(bg="yellow")
-        currentcolour = not currentcolour
-    root.geometry(f"700x400+{int(randint(10, 500))}+{int(randint(10, 200))}")
-    root.after(20, switchwindows)
-
-root.after(20, switchwindows)
 
 ntb_Screens = ttk.Notebook()
 ntb_Screens.grid()
