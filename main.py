@@ -34,6 +34,10 @@ class Source:
         for interactor in parent_screen.ray_interactors:
             print(interactor.collide(self.generated_segments[0])) #Give the first segment, for now #TODO: There is nothing here
 
+class Collision:
+    def __init__(self):
+        pass
+
 class Interactor:
     def collide(self, ray_source) -> tuple[bool, int, int]:
         return (True, randint(0, 100), randint(0, 100))
@@ -47,7 +51,12 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
         self.y1 = y1
     def __str__(self):
         return "Glass Rectangle"
-    def collide(self, ray_source) -> tuple[bool, int, int]:
+    def collide(self, ray: Source) -> tuple[bool, int, int]:
+        if ray.angle in (90, 270):
+            if self.x0 <= ray.start_x and ray.start_x <= self.x1:
+                return (True, ray.start_x, self.y1)
+        else:
+            return "Angle unhandled"
 
         return (True, randint(0, 100), randint(0, 1)) #(isCollided, x, y)
 
