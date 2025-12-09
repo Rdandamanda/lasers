@@ -26,8 +26,14 @@ class Interactor:
         wall_antinormal = pi if x == self._right else (3/ 2) * pi if y == self._bottom else 0 if x == self._left else (pi / 2)
         alpha = (ray_angle - wall_antinormal) % (2 * pi)
         if alpha <= (3 / 2) * pi and alpha >= pi / 2:
-            return [Source(x, y, source._angle, source._color, source._depth  - 1)]
-        beta = asin(sin(alpha) / self._index)
+            try:
+                wall_antinormal = (wall_antinormal + pi) % (2 * pi)
+                alpha = (ray_angle - wall_antinormal) % (2 * pi)
+                beta = asin(sin(alpha) * self._index)
+            except:
+                return []
+        else:
+            beta = asin(sin(alpha) / self._index)
         final_angle = ((beta + wall_antinormal) * (180 / pi)) % 360
         return [Source(x, y, final_angle, source._color, source._depth  - 1)]
 

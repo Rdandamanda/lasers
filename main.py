@@ -24,7 +24,7 @@ def main() -> None:
     # Populating it with objects
     for n in range(16):
         startup_Screen.add_source(Source(300, 140, (180 + 22.5 * n) % 360))
-    startup_Screen.add_interactor(Interactor(200, 400, 700, 550, 1.5))
+    startup_Screen.add_interactor(Interactor(100, 400, 700, 550, 1.5))
     startup_Screen.add_interactor(Interactor(750, 200, 1000, 900, 2.0))
 
     startup_Screen.draw_all()
