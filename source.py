@@ -3,7 +3,7 @@ from tkinter import Tk, Frame, Canvas, ttk
 
 
 class Source:
-    def __init__(self, x: int, y: int, angle: float, color: str = "red", depth: int = 4) -> None:
+    def __init__(self, x: int, y: int, angle: float, color: str = "red", depth: int = 8) -> None:
         self._x = x
         self._y = y
         self._angle = angle
@@ -14,10 +14,10 @@ class Source:
     def collide_vertical(self, x: int, top: int, bottom: int) -> int | None:
         try:
             angle = self._angle * (pi / 180)
-            t = (x - self._x) / sin(angle)
+            t = (x - self._x) / cos(angle)
             if t <= 0:
                 return None
-            c_y = self._y + t * cos(angle)
+            c_y = self._y + t * sin(angle)
             if c_y >= top and c_y <= bottom:
                 return c_y
         except ZeroDivisionError:
@@ -27,10 +27,10 @@ class Source:
     def collide_horizontal(self, y: int, left: int, right: int) -> int | None:
         try:
             angle = self._angle * (pi / 180)
-            t = (y - self._y) / cos(angle)
+            t = (y - self._y) / sin(angle)
             if t <= 0:
                 return None
-            c_x = self._x + t * sin(angle)
+            c_x = self._x + t * cos(angle)
             if c_x >= left and c_x <= right:
                 return c_x
         except ZeroDivisionError:

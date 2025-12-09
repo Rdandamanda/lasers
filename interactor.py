@@ -1,5 +1,5 @@
 from source import Source
-from math import pi, tan, atan
+from math import pi, sin, asin, cos, acos
 from random import randint
 from tkinter import Tk, Frame, Canvas, ttk
 class Interactor:
@@ -22,4 +22,12 @@ class Interactor:
     def collide(self, source: Source, x: int, y: int) -> list[Source]:
         if source._depth <= 1:
             return []
-        return [Source(x, y, source._angle + randint(-10, 10), source._color, source._depth - 1) for _ in range(2)]
+        ray_angle = source._angle * (pi / 180)
+        wall_antinormal = pi if x == self._right else (3/ 2) * pi if y == self._bottom else 0 if x == self._left else (pi / 2)
+        alpha = (ray_angle - wall_antinormal) % (2 * pi)
+        if alpha <= (3 / 2) * pi and alpha >= pi / 2:
+            return [Source(x, y, source._angle, source._color, source._depth  - 1)]
+        beta = asin(sin(alpha) / self._index)
+        final_angle = ((beta + wall_antinormal) * (180 / pi)) % 360
+        return [Source(x, y, final_angle, source._color, source._depth  - 1)]
+
