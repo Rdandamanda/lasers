@@ -1,3 +1,4 @@
+
 from tkinter import *
 from tkinter import ttk
 from math import tan, radians, asin, degrees, sin
