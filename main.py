@@ -1,4 +1,4 @@
-from constants import load_debug_screen, load_extra_debug_screens, star_spokes_power_of_2
+from constants import load_debug_screen, load_extra_debug_screens
 from core_classes import *
 from default_interactors import *
 from default_sources import *
@@ -21,13 +21,13 @@ if __name__ == "__main__":
 
         # Bind for getting mouse position
         bind_ray_star_to(root, startup_Screen)
-        root.bind("r", lambda _: startup_Screen.solve_collisions())
-        root.bind("r", lambda _: startup_Screen.draw_all())
 
         # Populating it with objects
         for source in create_ray_star(300, 140, 5):
             startup_Screen.ray_sources.append(source)
-        startup_Screen.ray_interactors.append(Glass_Rectangle(200, 200, 500, 350))
+        startup_Screen.ray_interactors.append(o := Glass_Rectangle(200, 200, 500, 350))
+        #startup_Screen.tk_canvas.tag_bind(o.canvas_rectangle, "<Enter>", on_enter)
+        del o
         startup_Screen.ray_interactors.append(Glass_Rectangle(50, 50, 75, 75))
 
         # Solve and draw

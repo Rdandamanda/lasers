@@ -2,7 +2,7 @@ from core_classes import *
 
 def bind_ray_star_to(tk_object, screen) -> None:
     tk_object.ray_star_source_ids = []
-    tk_object.bind("<Motion>", lambda event: replace_ray_star_to_cursor(event=event, tk_object=tk_object, screen=screen, spokes=964))
+    tk_object.bind("<Motion>", lambda event: replace_ray_star_to_cursor(event=event, tk_object=tk_object, screen=screen, spokes=8))
 
 def replace_ray_star_to_cursor(event, tk_object, screen: Screen, spokes) -> None:
     # Remove previously generated ray sources by Python object UUID
