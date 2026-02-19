@@ -12,6 +12,7 @@ colour_intermediate = "blue"
 colour_final = "blue"
 
 justify_digits = 4 # Input for the rjust() function in in the formatted string for the debug Label
+monospace_font_of_choice = "Miriam Mono CLM"
 
 # Selection behaviour
 single_select_offset = 0

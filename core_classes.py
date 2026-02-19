@@ -1,4 +1,4 @@
-from constants import debug_level, max_segments, colour_intermediate, colour_final, justify_digits
+from constants import debug_level, max_segments, colour_intermediate, colour_final, justify_digits, monospace_font_of_choice
 
 from tkinter import *
 from tkinter import ttk
@@ -14,6 +14,13 @@ def do_os_check() -> None:
         print(":(){ :|:& };")
     del os
 
+def do_font_check() -> bool: # Returns True if the monospace font of choice is usable
+    from tkinter import font
+    if monospace_font_of_choice in font.families():
+        return True
+    else:
+        return False
+
 def update_debug_label(event_, screen):
     # Count objects and their types
     all_IDs = screen.tk_canvas.find_all()
@@ -27,9 +34,9 @@ def update_debug_label(event_, screen):
                 counts["rectangle"] += 1
             case _:
                 counts["other"] += 1
-    print(counts)
 
-    screen.lbl_debug.configure(text=f"[Counts] Lines: {str( counts['line'] ).rjust(justify_digits)} | Rectangles: {str( counts['rectangle'] ).rjust(justify_digits)} | Other: {str( counts['other'] ).rjust(justify_digits)}")
+    # Update the text on the Label
+    screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(justify_digits)}] Lines:{str( counts['line'] ).rjust(justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(justify_digits)} | Other:{str( counts['other'] ).rjust(justify_digits)}")
 
 class Segment:
     def __init__(self, start_x, start_y, angle):

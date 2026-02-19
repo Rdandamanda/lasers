@@ -1,4 +1,4 @@
-from constants import load_debug_screen, load_extra_debug_screens
+from constants import load_debug_screen, load_extra_debug_screens, monospace_font_of_choice
 from core_classes import *
 from default_interactors import *
 from default_sources import *
@@ -9,11 +9,15 @@ if __name__ == "__main__":
     # GUI setup
     root = Tk()
     root.title("Ray optics tool")
+    
+    font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
 
     ntb_Screens = ttk.Notebook()
     ntb_Screens.grid()
 
     lbl_debug = Label()
+    if font_of_choice_available:
+        lbl_debug.configure(font=(monospace_font_of_choice, 10))
     lbl_debug.grid()
 
     # The debug screen
