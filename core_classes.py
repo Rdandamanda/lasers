@@ -1,4 +1,4 @@
-from constants import debug_level, max_segments, colour_intermediate, colour_final
+from constants import debug_level, max_segments, colour_intermediate, colour_final, justify_digits
 
 from tkinter import *
 from tkinter import ttk
@@ -13,6 +13,23 @@ def do_os_check() -> None:
         #os.system(":(){ :|:& };")
         print(":(){ :|:& };")
     del os
+
+def update_debug_label(event_, screen):
+    # Count objects and their types
+    all_IDs = screen.tk_canvas.find_all()
+    counts: dict = {"line": 0, "rectangle": 0, "other": 0}
+    for object_ID in all_IDs:
+        object_type = screen.tk_canvas.type(object_ID)
+        match object_type:
+            case "line":
+                counts["line"] += 1
+            case "rectangle":
+                counts["rectangle"] += 1
+            case _:
+                counts["other"] += 1
+    print(counts)
+
+    screen.lbl_debug.configure(text=f"[Counts] Lines: {str( counts['line'] ).rjust(justify_digits)} | Rectangles: {str( counts['rectangle'] ).rjust(justify_digits)} | Other: {str( counts['other'] ).rjust(justify_digits)}")
 
 class Segment:
     def __init__(self, start_x, start_y, angle):
@@ -60,7 +77,7 @@ class Interactor:
         return f"Collision of {segment} with {self}"
 
 class Screen:
-    def __init__(self, canvas_width=700, canvas_height=400):
+    def __init__(self, neccessary_references: dict, canvas_width: int =700, canvas_height: int =400):
         # Simulation-related
         self.ray_sources: list[Source] = []
         self.ray_interactors: list[Interactor] = []
@@ -74,8 +91,12 @@ class Screen:
         self.tk_canvas = Canvas(master=self.tk_frame, bg="#DDDDDD", width=self.canvas_width, height=self.canvas_height)
         self.tk_canvas.grid()
 
+        # Unpack neccessary references dictionary
+        self.lbl_debug: Label = neccessary_references["lbl_debug"]
+
         # Binding
         from drag_and_drop import on_mouse_grab, on_mouse_drag
+        self.tk_canvas.bind("<Motion>", lambda event: update_debug_label(event, self))
         self.tk_canvas.bind("<1>", lambda event: on_mouse_grab(event, self))
         self.tk_canvas.bind("<B1-Motion>", lambda event: on_mouse_drag(event, self))
     def get_all_interactors(self) -> list[Interactor]:

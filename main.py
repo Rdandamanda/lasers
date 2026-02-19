@@ -13,10 +13,14 @@ if __name__ == "__main__":
     ntb_Screens = ttk.Notebook()
     ntb_Screens.grid()
 
+    lbl_debug = Label()
+    lbl_debug.grid()
+
     # The debug screen
     if load_debug_screen == True:
         # Tab setup
-        startup_Screen = Screen()
+        screen_dict: dict = {"lbl_debug": lbl_debug}
+        startup_Screen = Screen(neccessary_references=screen_dict)
         ntb_Screens.add(startup_Screen.tk_frame, text="Debug Screen")
 
         # Bind for getting mouse position
@@ -36,12 +40,12 @@ if __name__ == "__main__":
 
     # Stuff for showing off the tabs. New screens, differentiated by colour. Happy with the high ease of adding them
     if load_extra_debug_screens == True:
-        startup_Screen1 = Screen()
+        startup_Screen1 = Screen(neccessary_references=screen_dict)
         startup_Screen1.tk_canvas.configure(bg="yellow")
         ntb_Screens.add(startup_Screen1.tk_frame, text="Další plocha")
         startup_Screen1.solve_collisions()
         startup_Screen1.plot_all()
-        startup_Screen2 = Screen()
+        startup_Screen2 = Screen(neccessary_references=screen_dict)
         startup_Screen2.tk_canvas.configure(bg="lavender")
         ntb_Screens.add(startup_Screen2.tk_frame, text="Plocha 3")
         startup_Screen2.solve_collisions()

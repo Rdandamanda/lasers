@@ -11,6 +11,8 @@ star_spokes_power_of_2 = 8
 colour_intermediate = "blue"
 colour_final = "blue"
 
+justify_digits = 4 # Input for the rjust() function in in the formatted string for the debug Label
+
 # Selection behaviour
 single_select_offset = 0
 select_all_interactors_near_offset = 20

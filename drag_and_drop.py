@@ -37,3 +37,4 @@ def on_mouse_drag(event: Event, screen: Screen):
     move_y = event.y - selection_original_coords[1]
     for id in selected_item_IDs:
         screen.tk_canvas.move(id, move_x, move_y)
+    selection_original_coords = (event.x, event.y)
