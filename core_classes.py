@@ -1,5 +1,4 @@
 from constants import debug_level, max_segments, colour_intermediate, colour_final
-from drag_and_drop import on_enter
 
 from tkinter import *
 from tkinter import ttk
@@ -74,6 +73,11 @@ class Screen:
         self.canvas_height = canvas_height
         self.tk_canvas = Canvas(master=self.tk_frame, bg="#DDDDDD", width=self.canvas_width, height=self.canvas_height)
         self.tk_canvas.grid()
+
+        # Binding
+        from drag_and_drop import on_mouse_grab, on_mouse_drag
+        self.tk_canvas.bind("<1>", lambda event: on_mouse_grab(event, self))
+        self.tk_canvas.bind("<B1-Motion>", lambda event: on_mouse_drag(event, self))
     def get_all_interactors(self) -> list[Interactor]:
         return self.ray_interactors
     def solve_collisions(self) -> None:
@@ -81,18 +85,14 @@ class Screen:
             print(f"Solving collisions for the {len(self.ray_sources)} Sources of this screen")
         for source in self.ray_sources:
             source.generate_segments(self)
-    def draw_all(self) -> None:
-        # Delete all canvas objects
-        for o in self.canvas_objects:
-            self.tk_canvas.delete(o)
-        for o in self.canvas_lines:
-            self.tk_canvas.delete(o)
-        #TODO: Temporary! Remove when fixing everything. Maybe I should use Canvas tags.
-        self.canvas_objects = [] #TODO: Temporary! Remove this when fixing everything. Maybe I should use Canvas tags.
-        for interactor in self.ray_interactors:
-            o = self.tk_canvas.create_rectangle(interactor.x0, interactor.y0, interactor.x1, interactor.y1, fill="#b4d5ff", outline="#92c1ff", width=2)
-            interactor.canvas_rectangle = o
-            self.canvas_objects.append(o)
+    def plot_all_interactors(self) -> None:
+        # Call the plot_self() function of each object. Those also take care of deleting the old object off that canvas
+        for object in self.ray_interactors:
+            object.plot_self(self)
+    def plot_all_lines(self) -> None:
+        for line in self.canvas_lines:
+            self.tk_canvas.delete(line)
+
         for source in self.ray_sources: # TODO: Improve, probably by splitting into 90-degree ranges. Or at least check for errors and make into a separate function.
             for i_segment in range(len(source.generated_segments)):
                 segment = source.generated_segments[i_segment]
@@ -140,3 +140,7 @@ class Screen:
                 line = self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill=colour_final)
                 self.canvas_lines.append(line)
                 #self.tk_canvas.create_line(300, 100, 0, 100, fill="black")
+
+    def plot_all(self) -> None:
+        self.plot_all_interactors()
+        self.plot_all_lines

@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
         # Solve and draw
         startup_Screen.solve_collisions()
-        startup_Screen.draw_all()
+        startup_Screen.plot_all()
 
     # Stuff for showing off the tabs. New screens, differentiated by colour. Happy with the high ease of adding them
     if load_extra_debug_screens == True:
@@ -40,11 +40,11 @@ if __name__ == "__main__":
         startup_Screen1.tk_canvas.configure(bg="yellow")
         ntb_Screens.add(startup_Screen1.tk_frame, text="Další plocha")
         startup_Screen1.solve_collisions()
-        startup_Screen1.draw_all()
+        startup_Screen1.plot_all()
         startup_Screen2 = Screen()
         startup_Screen2.tk_canvas.configure(bg="lavender")
         ntb_Screens.add(startup_Screen2.tk_frame, text="Plocha 3")
         startup_Screen2.solve_collisions()
-        startup_Screen2.draw_all()
+        startup_Screen2.plot_all()
 
     root.mainloop()

@@ -11,7 +11,7 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
         self.y0 = y0
         self.x1 = x1
         self.y1 = y1
-        self.canvas_rectangle = None
+        self.canvas_rectangle: int | None = None
     def __str__(self):
         return "Glass Rectangle"
     def collide(self, ray: Segment) -> list[tuple[bool, int, int]]:
@@ -117,6 +117,13 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
             return [Collision(False, None)]
         else:
             return return_list
+    def plot_self(self, screen: Screen):
+        # Deletes this object off that canvas
+        if self.canvas_rectangle != None:
+            screen.tk_canvas.delete(self.canvas_rectangle)
+
+        # Creates the object for this... object
+        self.canvas_rectangle = screen.tk_canvas.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill="#CCCCCC", outline="#E5E5E5", width=2)
 
 def snell_in(angle) -> float:
     if angle >= 0:

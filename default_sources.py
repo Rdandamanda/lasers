@@ -26,7 +26,7 @@ def replace_ray_star_to_cursor(event, tk_object, screen: Screen, spokes) -> None
     
     # Transfer the generated sources to the screen
     screen.solve_collisions()
-    screen.draw_all()
+    screen.plot_all_lines()
 
 def create_ray_star(x, y, spokes: int) -> list[Source]:
     #Input protection
