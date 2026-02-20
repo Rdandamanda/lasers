@@ -40,5 +40,5 @@ def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the gi
     # Oh no...
 
     # Call for an update
-    screen.solve_collisions()
+    screen.solve_all_sources()
     screen.plot_all_lines()

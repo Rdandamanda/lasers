@@ -5,6 +5,7 @@ if constants.TYPE_CHECKING:
 def bind_ray_star_to(tk_object: tk.Widget, screen: Screen) -> None:
     tk_object.ray_star_source_ids = []
     tk_object.bind("<Motion>", lambda event: replace_ray_star_to_cursor(event=event, tk_object=tk_object, screen=screen, spokes=8), add="+")
+    tk_object.bind("<B1-Motion>", lambda event: replace_ray_star_to_cursor(event=event, tk_object=tk_object, screen=screen, spokes=8), add="+")
 
 def replace_ray_star_to_cursor(event, tk_object: tk.Widget, screen: Screen, spokes) -> None:
     # Remove previously generated ray sources by Python object UUID
@@ -27,7 +28,7 @@ def replace_ray_star_to_cursor(event, tk_object: tk.Widget, screen: Screen, spok
         screen.ray_sources.append(source)
     
     # Transfer the generated sources to the screen
-    screen.solve_collisions()
+    screen.solve_all_sources()
     screen.plot_all_lines()
 
 def create_ray_star(x, y, spokes: int) -> list[Source]:

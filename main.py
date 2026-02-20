@@ -40,7 +40,7 @@ if __name__ == "__main__":
         startup_Screen.ray_interactors.append(Glass_Rectangle(50, 50, 75, 75))
 
         # Solve and draw
-        startup_Screen.solve_collisions()
+        startup_Screen.solve_all_sources()
         startup_Screen.plot_all()
 
     # Stuff for showing off the tabs. New screens, differentiated by colour. Happy with the high ease of adding them
@@ -48,12 +48,12 @@ if __name__ == "__main__":
         startup_Screen1 = Screen(neccessary_references=screen_dict)
         startup_Screen1.tk_canvas.configure(bg="yellow")
         ntb_Screens.add(startup_Screen1.tk_frame, text="Další plocha")
-        startup_Screen1.solve_collisions()
+        startup_Screen1.solve_all_sources()
         startup_Screen1.plot_all()
         startup_Screen2 = Screen(neccessary_references=screen_dict)
         startup_Screen2.tk_canvas.configure(bg="lavender")
         ntb_Screens.add(startup_Screen2.tk_frame, text="Plocha 3")
-        startup_Screen2.solve_collisions()
+        startup_Screen2.solve_all_sources()
         startup_Screen2.plot_all()
 
     root.mainloop()

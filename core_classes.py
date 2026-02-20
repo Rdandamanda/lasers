@@ -96,13 +96,15 @@ class Screen:
 
         # Binding
         # TODO: Fix the fact <Motion> doesn't get called when dragging with the left mouse button, probably since <B1-Motion> is bound
-        from drag_and_drop import on_mouse_grab, on_mouse_drag
+        from drag_and_drop import on_mouse_grab, on_mouse_drag # This is here because drag_and_drop depends on Screen and others... Not sure how come this works
         self.tk_canvas.bind("<Motion>", lambda event: update_debug_label(event, self), add="+")
         self.tk_canvas.bind("<1>", lambda event: on_mouse_grab(event, self), add="+")
         self.tk_canvas.bind("<B1-Motion>", lambda event: on_mouse_drag(event, self), add="+")
+        self.tk_canvas.bind("<B1-Motion>", lambda event: update_debug_label(event, self), add="+")
+        #self.tk_canvas.bind("<B1-Motion>", lambda event: update_debug_label(event, self), add="+")
     def get_all_interactors(self) -> list[Interactor]: # This is here so that it can be used when groups are added, since Screen.ray_interactors will only hold the interactors falling directly under it
         return self.ray_interactors
-    def solve_collisions(self) -> None:
+    def solve_all_sources(self) -> None:
         if constants.debug_level >= 2:
             print(f"Solving collisions for the {len(self.ray_sources)} Sources of this screen")
         for source in self.ray_sources:
@@ -112,59 +114,15 @@ class Screen:
         for object in self.ray_interactors:
             object.plot_self(self)
     def plot_all_lines(self) -> None:
-        #TODO: Use canvas tags instead
-        for line in self.tk_canvas.find_all():
-            if self.tk_canvas.type(line) == "line":
-                self.tk_canvas.delete(line)
+        for canvas_object in self.tk_canvas.find_withtag("line"):
+            self.tk_canvas.delete(canvas_object)
 
-        for source in self.ray_sources: # TODO: Improve, probably by splitting into 90-degree ranges. Or at least check for errors and make into a separate function.
-            for i_segment in range(len(source.generated_segments)):
-                segment = source.generated_segments[i_segment]
-                #TODO: Make just one case (and maybe edge cases) and use modulo 90° and 
-                if segment.angle >= 360:
-                    if constants.debug_level >= 1:
-                        print(f"WARN: Segment's angle is high: {segment.angle}")
-                if i_segment < len(source.generated_segments) - 1: #The not-ending lines
-                    next_segment = source.generated_segments[i_segment + 1]
-                    line = self.tk_canvas.create_line(segment.start_x, segment.start_y, next_segment.start_x, next_segment.start_y, fill=constants.colour_intermediate)
-                    continue
-                if segment.angle == 0:
-                    end_x = self.canvas_width
-                    end_y = segment.start_y
-                elif segment.angle == 90:
-                    end_x = segment.start_x
-                    end_y = self.canvas_height
-                elif segment.angle == 180:
-                    end_x = 0
-                    end_y = segment.start_y
-                elif segment.angle == 270:
-                    end_x = segment.start_x
-                    end_y = 0
-                elif segment.angle < 90:
-                    end_x = self.canvas_width
-                    dx = self.canvas_width - segment.start_x
-                    dy = tan(radians(segment.angle)) * dx
-                    end_y = segment.start_y + dy
-                elif segment.angle < 180:
-                    end_x = 0
-                    dx = segment.start_x
-                    dy = -tan(radians(segment.angle)) * dx
-                    end_y = segment.start_y + dy
-                elif segment.angle < 270:
-                    end_x = 0
-                    dx = segment.start_x
-                    dy = tan(radians(segment.angle)) * dx
-                    end_y = segment.start_y - dy
-                elif segment.angle < 360:
-                    end_x = self.canvas_width
-                    dx = self.canvas_width - segment.start_x
-                    dy = -tan(radians(segment.angle)) * dx
-                    end_y = segment.start_y - dy
-                line = self.tk_canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill=constants.colour_final)
+        for source in self.ray_sources:
+            render_segments(self.tk_canvas, source.generated_segments)
 
     def plot_all(self) -> None:
         self.plot_all_interactors()
-        self.plot_all_lines
+        self.plot_all_lines()
 
 def update_debug_label(event_, screen: Screen) -> None: # Does the counting for the given screen and updates the lbl_debug of the given screen
     # Count objects and their types
@@ -183,4 +141,56 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
     # Update the text on the Label
     screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
-#TODO: I think there really should be a separate function for rendering, that takes a canvas and a list of ray segments as an argument. The interactors, however, will deal with their own plotting themselves... that's strange
+def render_terminal_line(canvas: tk.Canvas, segment: Segment) -> None:
+    # TODO: Improve, probably by splitting into 90-degree ranges. Or at least check for errors and make into a separate function.
+    if segment.angle == 0:
+        end_x = canvas.winfo_width()
+        end_y = segment.start_y
+    elif segment.angle == 90:
+        end_x = segment.start_x
+        end_y = canvas.winfo_height()
+    elif segment.angle == 180:
+        end_x = 0
+        end_y = segment.start_y
+    elif segment.angle == 270:
+        end_x = segment.start_x
+        end_y = 0
+    elif segment.angle < 90:
+        end_x = canvas.winfo_width()
+        dx = canvas.winfo_width() - segment.start_x
+        dy = tan(radians(segment.angle)) * dx
+        end_y = segment.start_y + dy
+    elif segment.angle < 180:
+        end_x = 0
+        dx = segment.start_x
+        dy = -tan(radians(segment.angle)) * dx
+        end_y = segment.start_y + dy
+    elif segment.angle < 270:
+        end_x = 0
+        dx = segment.start_x
+        dy = tan(radians(segment.angle)) * dx
+        end_y = segment.start_y - dy
+    elif segment.angle < 360:
+        end_x = canvas.winfo_width()
+        dx = canvas.winfo_width() - segment.start_x
+        dy = -tan(radians(segment.angle)) * dx
+        end_y = segment.start_y - dy
+    
+    canvas.create_line(segment.start_x, segment.start_y, end_x, end_y, fill=constants.colour_final, tags="line")
+
+def render_nonterminal_line(canvas: tk.Canvas, segment: Segment, next_segment: Segment) -> None:
+    canvas.create_line(segment.start_x, segment.start_y, next_segment.start_x, next_segment.start_y, fill=constants.colour_intermediate, tags="line")
+
+def render_segments(canvas: tk.Canvas, segments: list[Segment]) -> None: # Renders the given Segments onto the given screen
+    last_segment_index = len(segments) - 1
+    for i_segment, segment in enumerate(segments):
+        if segment.angle >= 360:
+            if constants.debug_level >= 1:
+                print(f"WARN: Segment's angle is high: {segment.angle}")
+        if i_segment == last_segment_index:
+            # The terminal line
+            render_terminal_line(canvas, segment)
+        else:
+            # Non-terminal line
+            next_segment = segments[i_segment + 1]
+            render_nonterminal_line(canvas, segment, next_segment)
