@@ -14,7 +14,8 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
         self.canvas_rectangle: int | None = None
     def __str__(self):
         return "Glass Rectangle"
-    def collide(self, ray: Segment) -> list[tuple[bool, int, int]]:
+    def get_collision(self, ray: Segment) -> list[tuple[bool, int, int]]:
+        #How many hours of sleep was I on when writing this?
         return_list: list[Collision] = []
         if ray.angle == 90:
             if self.x0 <= ray.start_x and ray.start_x <= self.x1 and ray.start_y < self.y0:

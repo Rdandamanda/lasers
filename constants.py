@@ -1,5 +1,5 @@
 ## Constant
-import typing
+from typing import TYPE_CHECKING
 
 ## Can be changed
 # Any
@@ -9,6 +9,7 @@ debug_level = 1
 max_segments = 1000
 star_spokes_power_of_2 = 8
 
+# Customisation
 colour_intermediate = "blue"
 colour_final = "blue"
 

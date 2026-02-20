@@ -3,11 +3,12 @@ from core_classes import *
 from default_interactors import *
 from default_sources import *
 
+from tkinter import ttk
 do_os_check()
 
 if __name__ == "__main__":
     # GUI setup
-    root = Tk()
+    root = tk.Tk()
     root.title("Ray optics tool")
     
     font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
@@ -15,7 +16,7 @@ if __name__ == "__main__":
     ntb_Screens = ttk.Notebook()
     ntb_Screens.grid()
 
-    lbl_debug = Label()
+    lbl_debug = tk.Label()
     if font_of_choice_available:
         lbl_debug.configure(font=(monospace_font_of_choice, 10))
     lbl_debug.grid()
