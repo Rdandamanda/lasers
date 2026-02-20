@@ -37,10 +37,10 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
     def get_collision(self, segment: Segment) -> Collision:
         return f"Collision of {segment} with {self}"
 
-if constants.TYPE_CHECKING or True:
-    class Screen():
-        def get_all_interactors(self) -> list[Interactor]:
-            pass
+# To allow this minimum skeleton to be used for type annotations. This is to solve a circular dependency problem that arises due to type annotations
+class Screen():
+    def get_all_interactors(self) -> list[Interactor]:
+        assert False, "Method not meant to be run, class created only for type annotations"
 
 class Source:
     def __init__(self, x: int, y: int, angle: float) -> None:
