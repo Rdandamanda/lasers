@@ -1,10 +1,12 @@
 from core_classes import *
+if TYPE_CHECKING:
+    from tkinter import Widget
 
-def bind_ray_star_to(tk_object, screen) -> None:
+def bind_ray_star_to(tk_object: Widget, screen: Screen) -> None:
     tk_object.ray_star_source_ids = []
-    tk_object.bind("<Motion>", lambda event: replace_ray_star_to_cursor(event=event, tk_object=tk_object, screen=screen, spokes=8))
+    tk_object.bind("<Motion>", lambda event: replace_ray_star_to_cursor(event=event, tk_object=tk_object, screen=screen, spokes=8), add="+")
 
-def replace_ray_star_to_cursor(event, tk_object, screen: Screen, spokes) -> None:
+def replace_ray_star_to_cursor(event, tk_object: Widget, screen: Screen, spokes) -> None:
     # Remove previously generated ray sources by Python object UUID
     # TODO: What the hell?
     # After a day of thinking, I came to the conclusion it's already time to add groupings of objects. Got a few very exciting ideas for those for later, too
