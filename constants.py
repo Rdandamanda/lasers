@@ -1,5 +1,5 @@
 ## Constant
-from typing import TYPE_CHECKING
+import typing
 
 ## Can be changed
 # Any

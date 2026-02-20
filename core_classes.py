@@ -1,4 +1,5 @@
-from constants import debug_level, max_segments, colour_intermediate, colour_final, justify_digits, monospace_font_of_choice, TYPE_CHECKING
+from constants import debug_level, max_segments, colour_intermediate, colour_final, justify_digits, monospace_font_of_choice, typing
+print(typing.TYPE_CHECKING)
 
 from tkinter import *
 from tkinter import ttk
