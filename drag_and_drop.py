@@ -30,12 +30,17 @@ def get_mouse_selected(event: Event, screen: Screen) -> list[int]:
 def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in the constants module # TODO: this sounds terrible, those should probably be moved somewhere else, maybe make something for my program that is like a Tk() in Tkinter
     constants.selected_item_IDs = get_mouse_selected(event, screen)
 
+    constants.selected_internal_objects = []
     for id in constants.selected_item_IDs:
-        constants.selected_item_internal_objects.append( screen.ID_to_interactor_dict[id] )
+        constants.selected_internal_objects.append( screen.ID_to_interactor_dict[id] )
         
     constants.selection_original_coords = (event.x, event.y)
 
 def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the given screen and calls for an update
+    # Doesn't need to run if nothing is being dragged
+    if constants.selected_internal_objects == []:
+        return
+    
     # Move stuff on the canvas
     move_x = event.x - constants.selection_original_coords[0]
     move_y = event.y - constants.selection_original_coords[1]
@@ -45,10 +50,9 @@ def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the gi
 
     # Move stuff internally
     # Oh no...
-    for obj in constants.selected_item_internal_objects:
+    for obj in constants.selected_internal_objects:
         obj.move(move_x, move_y)
 
     # Call for an update
     screen.solve_all_sources()
     screen.plot_all_lines()
-    screen.plot_all_interactors()

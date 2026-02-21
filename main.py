@@ -29,7 +29,7 @@ if __name__ == "__main__":
         ntb_Screens.add(startup_Screen.tk_frame, text="Debug Screen")
 
         # Bind for getting mouse position
-        bind_ray_star_to(startup_Screen.tk_canvas, startup_Screen)
+        #bind_ray_star_to(startup_Screen.tk_canvas, startup_Screen)
 
         # Populating it with objects
         for source in create_ray_star(300, 140, 5):

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 load_debug_screen = True
 load_extra_debug_screens = True
 debug_level = 1
-max_segments = 1000
+max_segments = 20
 star_spokes_power_of_2 = 8
 
 # Customisation
@@ -24,5 +24,5 @@ lines_select_offset = 40
 ## Internal
 selection_mode = "SINGLE_SELECT" # "SELECT_ALL_INTERACTORS_NEAR", "LINES_SELECT"
 selected_item_IDs = []
-selected_item_internal_objects = []
+selected_internal_objects = []
 selection_original_coords = (None, None)
