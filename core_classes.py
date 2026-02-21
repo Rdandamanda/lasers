@@ -4,8 +4,7 @@ import tkinter as tk
 from collections import namedtuple
 from math import tan, radians
 
-# Vytvořit z toho funkci mi poradil Ondra, je to aby os byl lokální symbol, definovaný jenom pro tuhle funkci a ne pro celý program
-def do_os_check() -> None:
+def do_os_check() -> None: # Vytvořit z toho funkci mi poradil Ondra, je to aby os byl lokální symbol, definovaný jenom pro tuhle funkci a ne pro celý program
     import os
     if os.name != "nt":
         print(f"os.name == {os.name}, not \"nt\". Nice!")
@@ -20,8 +19,7 @@ def do_font_check() -> bool: # Returns True if the monospace font of choice is u
     else:
         return False
 
-#Scrapping the idea of making a Collision class. This is the kind of thing that is best kept as a dictionary. A collision object really does not need its own functions or anything. The type checking would still be a good thing though
-Collision = namedtuple("Collision", ["boolean", "segments"])
+Collision = namedtuple("Collision", ["boolean", "segments"]) # TODO: Consider making this into a dictionary later
 
 class Segment:
     def __init__(self, start_x: int, start_y: int, angle: float):
@@ -37,8 +35,7 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
     def get_collision(self, segment: Segment) -> Collision:
         return f"Collision of {segment} with {self}"
 
-# To allow this minimum skeleton to be used for type annotations. This is to solve a circular dependency problem that arises due to type annotations
-class Screen():
+class Screen(): # To allow this minimum skeleton to be used for type annotations. This is to solve a circular dependency problem that arises due to type annotations
     def get_all_interactors(self) -> list[Interactor]:
         assert False, "Method not meant to be run, class created only for type annotations"
 
@@ -86,8 +83,8 @@ class Screen:
 
         # UI-related
         self.tk_frame = tk.Frame()
-        self.canvas_width = canvas_width
-        self.canvas_height = canvas_height
+        self.canvas_width: int = canvas_width
+        self.canvas_height: int = canvas_height
         self.tk_canvas = tk.Canvas(master=self.tk_frame, bg="#DDDDDD", width=self.canvas_width, height=self.canvas_height)
         self.tk_canvas.grid()
 
@@ -95,7 +92,6 @@ class Screen:
         self.lbl_debug: tk.Label = neccessary_references["lbl_debug"]
 
         # Binding
-        # TODO: Fix the fact <Motion> doesn't get called when dragging with the left mouse button, probably since <B1-Motion> is bound
         from drag_and_drop import on_mouse_grab, on_mouse_drag # This is here because drag_and_drop depends on Screen and others... Not sure how come this works
         self.tk_canvas.bind("<Motion>", lambda event: update_debug_label(event, self), add="+")
         self.tk_canvas.bind("<1>", lambda event: on_mouse_grab(event, self), add="+")
