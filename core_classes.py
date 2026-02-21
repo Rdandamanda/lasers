@@ -22,10 +22,11 @@ def do_font_check() -> bool: # Returns True if the monospace font of choice is u
 Collision = namedtuple("Collision", ["boolean", "segments"]) # TODO: Consider making this into a dictionary later
 
 class Segment:
-    def __init__(self, start_x: int, start_y: int, angle: float):
+    def __init__(self, start_x: int, start_y: int, angle: float, visible: bool =True):
         self.start_x: int = start_x
         self.start_y: int = start_y
         self.angle: float = angle
+        self.visible: bool = visible
     def __str__(self):
         return f"Segment with X: {self.start_x} Y: {self.start_y} Angle: {self.angle}"
 
@@ -75,8 +76,11 @@ class Source:
                 if candidate_collision.boolean == True:
                     for seg in candidate_collision.segments:
                         self.generated_segments.append(seg)
-                        # Guard against having too many segments. If max_segments reached, break
+                        # Guard against having too many segments. If max_segments reached, set last segment as invisible and break
                         if len(self.generated_segments) >= constants.max_segments:
+                            self.generated_segments[-1].visible = False
+                            if constants.debug_level:
+                                print(f"WARN: Max segments limit reached when colliding with {interactor}")
                             break
                 if len(self.generated_segments) >= constants.max_segments: # If max_segments reached, stop going through more interactors
                     break
@@ -192,6 +196,9 @@ def render_segments(canvas: tk.Canvas, segments: list[Segment]) -> None: # Rende
         if segment.angle >= 360:
             if constants.debug_level >= 1:
                 print(f"WARN: Segment's angle is high: {segment.angle}")
+        if not segment.visible:
+            continue
+
         if i_segment == last_segment_index:
             # The terminal line
             render_terminal_line(canvas, segment)

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 # Any
 load_debug_screen = True
 load_extra_debug_screens = True
-debug_level = 1
+debug_level = 1 # 1: Warnings
 max_segments = 20
 star_spokes_power_of_2 = 8
 
