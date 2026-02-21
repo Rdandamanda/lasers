@@ -29,15 +29,22 @@ class Segment:
     def __str__(self):
         return f"Segment with X: {self.start_x} Y: {self.start_y} Angle: {self.angle}"
 
+class Interactor: # For type annotations
+    pass
+
+class Screen: # To allow this minimum skeleton to be used for type annotations. This is to solve a circular dependency problem that arises due to type annotations
+    def get_all_interactors(self) -> list[Interactor]:
+        assert False, "Method not meant to be run, class created only for type annotations"
+
 class Interactor: # Generic parent class that doesn't hold any functionality in itself
     def __str__(self):
         return "Generic Interactor"
     def get_collision(self, segment: Segment) -> Collision:
         return f"Collision of {segment} with {self}"
-
-class Screen(): # To allow this minimum skeleton to be used for type annotations. This is to solve a circular dependency problem that arises due to type annotations
-    def get_all_interactors(self) -> list[Interactor]:
-        assert False, "Method not meant to be run, class created only for type annotations"
+    def plot_self(self, screen: Screen) -> None: # Must delete the old canvas object and create a new one and register it with the screen
+        assert False, "Method of generic Interactor class not meant to be run"
+    def move(self, x, y) -> None:
+        assert False, "Method of generic Interactor class not meant to be run"
 
 class Source:
     def __init__(self, x: int, y: int, angle: float) -> None:
@@ -88,6 +95,9 @@ class Screen:
         self.tk_canvas = tk.Canvas(master=self.tk_frame, bg="#DDDDDD", width=self.canvas_width, height=self.canvas_height)
         self.tk_canvas.grid()
 
+        # Linking internal objects to canvas objects
+        self.ID_to_interactor_dict: dict = {}
+
         # Unpack neccessary references dictionary
         self.lbl_debug: tk.Label = neccessary_references["lbl_debug"]
 
@@ -97,7 +107,6 @@ class Screen:
         self.tk_canvas.bind("<1>", lambda event: on_mouse_grab(event, self), add="+")
         self.tk_canvas.bind("<B1-Motion>", lambda event: on_mouse_drag(event, self), add="+")
         self.tk_canvas.bind("<B1-Motion>", lambda event: update_debug_label(event, self), add="+")
-        #self.tk_canvas.bind("<B1-Motion>", lambda event: update_debug_label(event, self), add="+")
     def get_all_interactors(self) -> list[Interactor]: # This is here so that it can be used when groups are added, since Screen.ray_interactors will only hold the interactors falling directly under it
         return self.ray_interactors
     def solve_all_sources(self) -> None:

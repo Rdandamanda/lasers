@@ -22,9 +22,7 @@ select_all_interactors_near_offset = 20
 lines_select_offset = 40
 
 ## Internal
-global selection_mode
 selection_mode = "SINGLE_SELECT" # "SELECT_ALL_INTERACTORS_NEAR", "LINES_SELECT"
-global selected_item_IDs
-selcted_item_IDs = []
-global selection_original_coords
+selected_item_IDs = []
+selected_item_internal_objects = []
 selection_original_coords = (None, None)
