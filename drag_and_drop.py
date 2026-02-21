@@ -34,6 +34,7 @@ def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the gi
     move_y = event.y - selection_original_coords[1]
     for id in selected_item_IDs:
         screen.tk_canvas.move(id, move_x, move_y)
+        print(screen.tk_canvas.find_withtag(id).associated_interactor)
     selection_original_coords = (event.x, event.y)
 
     # Move stuff internally

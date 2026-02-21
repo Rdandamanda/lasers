@@ -125,6 +125,8 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
 
         # Creates the object for this... object
         self.canvas_rectangle = screen.tk_canvas.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill="#CCCCCC", outline="#E5E5E5", width=2)
+        print(screen.tk_canvas.find_withtag(self.canvas_rectangle)).associated_interactor = self
+        tk.Canvas().
 
 def snell_in(angle) -> float:
     if angle >= 0:
