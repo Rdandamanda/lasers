@@ -135,7 +135,7 @@ class Glass_Rectangle(Interactor):
         ID_to_interactor_dict = self.parent_screen.ID_to_interactor_dict
         # Deletes this object off that canvas
         if self.canvas_rectangle != None:
-            tk_canvas.delete(self.canvas_rectangle) # If I'm leaving screen as an argument and not making it an instance attribute for the reason that I want to allow for it to be plotte donto another, independent screen, then that purpose is defeated by keeping 1 ID for the canvas object, since that won't match across screens... TODO: Decide what to do with this
+            tk_canvas.delete(self.canvas_rectangle) # If I'm leaving screen as an argument and not making it an instance attribute for the reason that I want to allow for it to be plotte donto another, independent screen, then that purpose is defeated by keeping 1 ID for the canvas object, since that won't match across screens... TODO: Decide what to do with this. DONE: Decided what to do with this (decided to not create it)
             del ID_to_interactor_dict[self.canvas_rectangle]
 
         # Creates the canvas object for this... object
