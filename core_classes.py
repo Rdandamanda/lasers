@@ -41,6 +41,8 @@ class Screen: # To allow this minimum skeleton to be used for type annotations. 
         assert False, "Method not meant to be run, class created only for type annotations"
 
 class Interactor: # Generic parent class that doesn't hold any functionality in itself
+    def __init__(self):
+        self.parent_screen: Screen
     def __str__(self):
         return "Generic Interactor"
     def get_collision(self, segment: Segment) -> Collision:

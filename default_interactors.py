@@ -3,18 +3,30 @@ from drag_and_drop import *
 
 from math import degrees, sin, asin
 
-class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
-    def __init__(self, x0, y0, x1, y1):
+class Glass_Rectangle(Interactor):
+    def __init__(self, parent_screen, x0, y0, x1, y1):
+        self.parent_screen = parent_screen
+        # Ensures coordinates are in the correct order x0 <= x1; y0 <= y1
+        # If they are the same (x0 == x1 or y0 == y1), it still warns, and still switches them (which has no effect), but lets them be the same
         if x0 >= x1 or y0 >= y1:
-            raise Exception("Wrong order or the same")
+            if constants.debug_level >= 1:
+                print("WARN: Rectangle coordinates specified in the wrong order or are the same")
+            if x0 >= x1:
+                x0, x1 = x1, x0
+            if y0 >= y1:
+                y0, y1 = y1, y0
         self.x0 = x0
         self.y0 = y0
         self.x1 = x1
         self.y1 = y1
         self.canvas_rectangle: int | None = None
+        # Constants specific to this type of interactor - in this case, customisation colours
+        self.color_fill = "#CCCCCC"
+        self.color_outline = "#E5E5E5"
+        # TODO: This can eventually be switched out for a materials system, for easier and cleaner-defined defaults and convenient customisation in the GUI
     def __str__(self):
         return "Glass Rectangle"
-    def get_collision(self, ray: Segment) -> list[tuple[bool, int, int]]:
+    def get_collision(self, ray: Segment) -> list[Collision]: # TODO: This is the big thing to fix
         #How many hours of sleep was I on when writing this?
         return_list: list[Collision] = []
         if ray.angle == 90:
@@ -118,17 +130,19 @@ class Glass_Rectangle(Interactor): #TODO: Decide how such objects will be stored
             return [Collision(False, None)]
         else:
             return return_list
-    def plot_self(self, screen: Screen):
+    def plot_self(self):
+        tk_canvas = self.parent_screen.tk_canvas
+        ID_to_interactor_dict = self.parent_screen.ID_to_interactor_dict
         # Deletes this object off that canvas
         if self.canvas_rectangle != None:
-            screen.tk_canvas.delete(self.canvas_rectangle)
-            del screen.ID_to_interactor_dict[self.canvas_rectangle]
+            tk_canvas.delete(self.canvas_rectangle) # If I'm leaving screen as an argument and not making it an instance attribute for the reason that I want to allow for it to be plotte donto another, independent screen, then that purpose is defeated by keeping 1 ID for the canvas object, since that won't match across screens... TODO: Decide what to do with this
+            del ID_to_interactor_dict[self.canvas_rectangle]
 
-        # Creates the object for this... object
-        self.canvas_rectangle = screen.tk_canvas.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill="#CCCCCC", outline="#E5E5E5", width=2)
+        # Creates the canvas object for this... object
+        self.canvas_rectangle = tk_canvas.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill=self.color_fill, outline=self.color_outline, width=2)
 
         # Registers the canvas object with the screen
-        screen.ID_to_interactor_dict[self.canvas_rectangle] = self
+        ID_to_interactor_dict[self.canvas_rectangle] = self
     def move(self, x, y) -> None:
         self.x0 += x
         self.x1 += x
