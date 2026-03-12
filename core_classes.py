@@ -22,10 +22,13 @@ def do_font_check() -> bool: # Returns True if the monospace font of choice is u
 Collision = namedtuple("Collision", ["boolean", "segments"]) # TODO: Consider making this into a dictionary later
 
 class Segment:
-    def __init__(self, start_x: int, start_y: int, angle: float, visible: bool =True):
+    def __init__(self, start_x: int, start_y: int, angle: float, end_specified: bool =False, end_x: int =None, end_y: int =None, visible: bool =True):
         self.start_x: int = start_x
         self.start_y: int = start_y
         self.angle: float = angle
+        self.end_specified: bool = end_specified
+        self.end_x: int | None = end_x
+        self.end_y: int | None = end_y
         self.visible: bool = visible
     def __str__(self):
         return f"Segment with X: {self.start_x} Y: {self.start_y} Angle: {self.angle}"
@@ -80,7 +83,7 @@ class Source:
                         if len(self.generated_segments) >= constants.max_segments:
                             self.generated_segments[-1].visible = False
                             if constants.debug_level:
-                                print(f"WARN: Max segments limit reached when colliding with {interactor}")
+                                print(f"WARN: Max segments limit ({constants.max_segments}) reached when colliding with {interactor}")
                             break
                 if len(self.generated_segments) >= constants.max_segments: # If max_segments reached, stop going through more interactors
                     break
