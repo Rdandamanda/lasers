@@ -5,9 +5,12 @@ from typing import TYPE_CHECKING
 # Any
 load_debug_screen = True
 load_extra_debug_screens = True
-debug_level = 1 # 1: Warnings
-max_segments = 20
 star_spokes_power_of_2 = 8
+
+# Debug and limits:
+debug_level = 1 # 1: Warnings
+debug_background_colors = True # Gives vibrant colours to frames that shouldn't have visible backgrounds
+max_segments = 20
 
 # Customisation
 colour_intermediate = "blue"

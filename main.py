@@ -10,16 +10,31 @@ if __name__ == "__main__":
     # GUI setup
     root = tk.Tk()
     root.title("Ray optics tool")
+    root.columnconfigure(1, weight=1)
+    root.rowconfigure(0, weight=1)
     
     font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
 
-    ntb_Screens = ttk.Notebook()
-    ntb_Screens.grid()
+    tvw_objects = ttk.Treeview()
+    tvw_objects.grid(column=0, row=0, sticky="ns")
 
-    lbl_debug = tk.Label()
+    frm_screens = tk.Frame() # Obsahuje ntb_screens a lbl_debug a grp_grip
+    if constants.debug_background_colors:
+        frm_screens.configure(bg="red")
+    frm_screens.grid(column=1, row=0, sticky="nsew")
+    frm_screens.columnconfigure(0, weight=1)
+    frm_screens.rowconfigure(0, weight=1)
+
+    ntb_Screens = ttk.Notebook(master=frm_screens)
+    ntb_Screens.grid(columnspan=2, sticky="nsew")
+
+    lbl_debug = tk.Label(master=frm_screens)
     if font_of_choice_available:
         lbl_debug.configure(font=(monospace_font_of_choice, 10))
-    lbl_debug.grid()
+    lbl_debug.grid(sticky="ew")
+
+    grp_grip = ttk.Sizegrip(master=frm_screens)
+    grp_grip.grid(column=1, row=1, sticky="ns")
 
     # The debug screen
     if load_debug_screen == True:
@@ -34,10 +49,10 @@ if __name__ == "__main__":
         # Populating it with objects
         for source in create_ray_star(300, 140, 5):
             startup_Screen.ray_sources.append(source)
-        startup_Screen.ray_interactors.append(o := Glass_Rectangle(200, 200, 500, 350))
+        startup_Screen.ray_interactors.append(o := Glass_Rectangle(startup_Screen, 200, 200, 500, 350))
         #startup_Screen.tk_canvas.tag_bind(o.canvas_rectangle, "<Enter>", on_enter)
         del o
-        startup_Screen.ray_interactors.append(Glass_Rectangle(50, 50, 75, 75))
+        startup_Screen.ray_interactors.append(Glass_Rectangle(startup_Screen, 50, 50, 75, 75))
 
         # Solve and draw
         startup_Screen.solve_all_sources()

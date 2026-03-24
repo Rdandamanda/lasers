@@ -97,12 +97,19 @@ class Screen:
         self.ray_sources: list[Source] = []
         self.ray_interactors: list[Interactor] = []
 
-        # UI-related
+        # UI-related declaration
         self.tk_frame = tk.Frame()
         self.canvas_width: int = canvas_width
         self.canvas_height: int = canvas_height
         self.tk_canvas = tk.Canvas(master=self.tk_frame, bg="#DDDDDD", width=self.canvas_width, height=self.canvas_height)
-        self.tk_canvas.grid()
+        self.tk_canvas.grid(sticky="nsew")
+
+        # UI-related configuration
+        self.tk_frame.rowconfigure(0, weight=1)
+        self.tk_frame.columnconfigure(0, weight=1)
+        if constants.debug_background_colors:
+            self.tk_frame.configure(bg="blue")
+            print("Yes, works")
 
         # Linking internal objects to canvas objects
         self.ID_to_interactor_dict: dict = {}
@@ -126,7 +133,7 @@ class Screen:
     def plot_all_interactors(self) -> None:
         # Call the plot_self() function of each object. Those also take care of deleting the old object off that canvas
         for object in self.ray_interactors:
-            object.plot_self(self)
+            object.plot_self()
     def plot_all_lines(self) -> None:
         for canvas_object in self.tk_canvas.find_withtag("line"):
             self.tk_canvas.delete(canvas_object)
