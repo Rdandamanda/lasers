@@ -16,9 +16,9 @@ if __name__ == "__main__":
     font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
 
     menubar = tk.Menu(root)
+    root.configure(menu=menubar)
     menubar.add_command(label="Soubor")
     menubar.add_command(label="Zavřít", command=root.quit)
-    root.configure(menu=menubar)
 
     pnw_panes = ttk.Panedwindow(master=root, orient=tk.HORIZONTAL)
     pnw_panes.grid(sticky="nsew", row=0, column=0)
@@ -43,15 +43,32 @@ if __name__ == "__main__":
         lbl_debug.configure(font=(monospace_font_of_choice, 10))
     lbl_debug.grid(sticky="ew")
 
-    grp_grip = ttk.Sizegrip(master=frm_screens)
-    grp_grip.grid(column=1, row=1, sticky="ns")
+    grp_grip_center = ttk.Sizegrip(master=frm_screens)
+    grp_grip_center.grid(column=1, row=1, sticky="ns")
+
+    # Right pane
+    frm_editing = tk.Frame()
+    if constants.debug_background_colors:
+        frm_editing.configure(bg="yellow")
+    frm_editing.rowconfigure(0, weight=1)
+    frm_editing.columnconfigure(0, weight=1)
+    pnw_panes.add(frm_editing, weight=0)
+
+    lfr_editing = tk.LabelFrame(master=frm_editing, text="Editování objektu")
+    lfr_editing.grid(sticky="nsew", padx=(0, 5))
+
+    lbl_editing_name = tk.Label(master=lfr_editing, width=30, text="Typ objektu: (nevybráno)")
+    lbl_editing_name.grid(pady=(10, 0))
+
+    grp_grip_right = ttk.Sizegrip(master=frm_editing)
+    grp_grip_right.grid(column=0, row=1, sticky="se")
 
     # The debug screen
     if load_debug_screen == True:
         # Tab setup
         screen_dict: dict = {"lbl_debug": lbl_debug}
         startup_Screen = Screen(neccessary_references=screen_dict)
-        ntb_Screens.add(startup_Screen.tk_frame, text="Debug Screen")
+        ntb_Screens.add(startup_Screen.tk_frame, text="Testovací plocha")
 
         # Bind for getting mouse position
         #bind_ray_star_to(startup_Screen.tk_canvas, startup_Screen)

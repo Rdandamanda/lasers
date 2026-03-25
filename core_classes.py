@@ -92,7 +92,7 @@ class Source:
             solving_index += 1
 
 class Screen:
-    def __init__(self, neccessary_references: dict, canvas_width: int =700, canvas_height: int =400):
+    def __init__(self, neccessary_references: dict, canvas_width: int =1200, canvas_height: int =400):
         # Simulation-related
         self.ray_sources: list[Source] = []
         self.ray_interactors: list[Interactor] = []
