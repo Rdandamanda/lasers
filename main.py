@@ -15,6 +15,11 @@ if __name__ == "__main__":
     
     font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
 
+    menubar = tk.Menu(root)
+    menubar.add_command(label="Soubor")
+    menubar.add_command(label="Zavřít", command=root.quit)
+    root.configure(menu=menubar)
+
     pnw_panes = ttk.Panedwindow(master=root, orient=tk.HORIZONTAL)
     pnw_panes.grid(sticky="nsew", row=0, column=0)
 
@@ -77,3 +82,5 @@ if __name__ == "__main__":
         startup_Screen2.plot_all()
 
     root.mainloop()
+    if constants.debug_level >= 1:
+        print("Úspěšně ukončeno")
