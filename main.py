@@ -10,20 +10,25 @@ if __name__ == "__main__":
     # GUI setup
     root = tk.Tk()
     root.title("Ray optics tool")
-    root.columnconfigure(1, weight=1)
+    root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
     
     font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
 
-    tvw_objects = ttk.Treeview()
-    tvw_objects.grid(column=0, row=0, sticky="ns")
+    pnw_panes = ttk.Panedwindow(master=root, orient=tk.HORIZONTAL)
+    pnw_panes.grid(sticky="nsew", row=0, column=0)
 
+    # Left pane
+    tvw_objects = ttk.Treeview()
+    pnw_panes.add(tvw_objects, weight=0)
+
+    # Central pane
     frm_screens = tk.Frame() # Obsahuje ntb_screens a lbl_debug a grp_grip
     if constants.debug_background_colors:
         frm_screens.configure(bg="red")
-    frm_screens.grid(column=1, row=0, sticky="nsew")
     frm_screens.columnconfigure(0, weight=1)
     frm_screens.rowconfigure(0, weight=1)
+    pnw_panes.add(frm_screens, weight=1)
 
     ntb_Screens = ttk.Notebook(master=frm_screens)
     ntb_Screens.grid(columnspan=2, sticky="nsew")

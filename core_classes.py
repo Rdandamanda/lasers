@@ -109,7 +109,6 @@ class Screen:
         self.tk_frame.columnconfigure(0, weight=1)
         if constants.debug_background_colors:
             self.tk_frame.configure(bg="blue")
-            print("Yes, works")
 
         # Linking internal objects to canvas objects
         self.ID_to_interactor_dict: dict = {}
