@@ -1,4 +1,5 @@
 from core_classes import *
+from collisions import collide_line_box
 
 class Glass_Rectangle(Interactor):
     def __init__(self, parent_screen, x0, y0, x1, y1):
@@ -23,110 +24,8 @@ class Glass_Rectangle(Interactor):
         # TODO: This can eventually be switched out for a materials system, for easier and cleaner-defined defaults and convenient customisation in the GUI
     def __str__(self):
         return "Glass Rectangle"
-    def get_collision(self, ray: Segment) -> list[Collision]: # TODO: This is the big thing to fix
-        #How many hours of sleep was I on when writing this?
-        return_list: list[Collision] = []
-        if ray.angle == 90:
-            if self.x0 <= ray.start_x and ray.start_x <= self.x1 and ray.start_y < self.y0:
-                return_list.append(Collision(boolean=True, segments=[Segment(angle=270, start_x=ray.start_x, start_y=self.y0)]))
-        elif ray.angle == 270:
-            if self.x0 <= ray.start_x and ray.start_x <= self.x1 and ray.start_y > self.y1:
-                return_list.append(Collision(boolean=True, segments=[Segment(angle=90, start_x=ray.start_x, start_y=self.y1)]))
-        elif ray.angle == 180:
-            if self.y0 <= ray.start_y and ray.start_y <= self.y1 and ray.start_x > self.x1:
-                return_list.append(Collision(boolean=True, segments=[Segment(angle=0, start_x=self.x1, start_y=ray.start_y)]))
-        elif ray.angle == 0:
-            if self.y0 <= ray.start_y and ray.start_y <= self.y1 and ray.start_x < self.x0:
-                return_list.append(Collision(boolean=True, segments=[Segment(angle=180, start_x=self.x0, start_y=ray.start_y)]))
-        elif ray.angle < 90:
-            # Collide with horizontal line:
-            dy = self.y0 - ray.start_y
-            if dy > 0:
-                dx = (1/tan(radians(ray.angle))) * dy
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.x0 < potential_endx and potential_endx < self.x1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 360 - ray.angle)]))
-            # Collide with vertical line:
-            dx = self.x0 - ray.start_x
-            if dx > 0:
-                dy = tan(radians(ray.angle)) * dx
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.y0 < potential_endy and potential_endy < self.y1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 180 - ray.angle)]))
-        elif ray.angle < 180:
-            # Collide with horizontal line:
-            dy = self.y0 - ray.start_y
-            if dy > 0:
-                dx = (1/tan(radians(ray.angle))) * dy
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.x0 < potential_endx and potential_endx < self.x1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 360 - ray.angle)]))
-            # Collide with vertical line:
-            dx = self.x1 - ray.start_x
-            if dx < 0:
-                dy = tan(radians(ray.angle)) * dx
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.y0 < potential_endy and potential_endy < self.y1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 180 - ray.angle)]))
-        elif ray.angle < 270:
-            # Collide with horizontal line:
-            dy = self.y1 - ray.start_y
-            if dy < 0:
-                dx = (1/tan(radians(ray.angle))) * dy
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.x0 < potential_endx and potential_endx < self.x1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 360 - ray.angle)]))
-            # Collide with vertical line:
-            dx = self.x1 - ray.start_x
-            if dx < 0:
-                dy = tan(radians(ray.angle)) * dx
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.y0 < potential_endy and potential_endy < self.y1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 180 - ray.angle)]))
-        elif ray.angle < 360:
-            # Collide with horizontal line:
-            dy = self.y1 - ray.start_y
-            if dy < 0:
-                dx = (1/tan(radians(ray.angle))) * dy
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.x0 < potential_endx and potential_endx < self.x1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 360 - ray.angle)]))
-            # Collide with vertical line:
-            dx = self.x0 - ray.start_x
-            if dx > 0:
-                dy = tan(radians(ray.angle)) * dx
-                potential_endx = ray.start_x + dx
-                potential_endy = ray.start_y + dy
-                if self.y0 < potential_endy and potential_endy < self.y1:
-                    return_list.append(Collision(boolean=True, segments=[Segment(potential_endx, potential_endy, 540 - ray.angle)]))
-
-        else:
-            #raise Exception("Angle unhandled")
-            print("angle not handled")
-            return_list.append(Collision(False, None))
-
-        for collision in return_list:
-            try:
-                for seg in collision.segments:
-                    if collision.boolean == False:
-                        continue
-                    if (seg.start_x == ray.start_x and seg.start_y == ray.start_y):
-                        return_list.remove(seg) #TODO: This is intentionally cursed, remove as soon as feeling like it
-            except:
-                print(collision)
-                breakpoint
-        
-        if len(return_list) == 0:
-            return [Collision(False, None)]
-        else:
-            return return_list
+    def get_collision(self, ray: Segment) -> dict:
+        return collide_line_box(ray.start_x, ray.start_y, ray.angle, self.x0, self.y0, self.x1, self.y1)
     def plot_self(self):
         screen = self.parent_screen
         # Deletes this object off that canvas

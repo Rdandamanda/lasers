@@ -13,8 +13,7 @@ debug_background_colors = False # Gives vibrant colours to frames that shouldn't
 max_segments = 20
 
 # Customisation
-colour_intermediate = "blue"
-colour_final = "blue"
+color_line_standard = "blue"
 
 justify_digits = 4 # Input for the rjust() function in in the formatted string for the debug Label
 monospace_font_of_choice = "Miriam Mono CLM"

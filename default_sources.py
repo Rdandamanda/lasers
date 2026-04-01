@@ -31,7 +31,7 @@ def replace_ray_star_to_cursor(event, tk_object: tk.Widget, screen: Screen, spok
     screen.solve_all_sources()
     screen.plot_all_lines()
 
-def create_ray_star(x, y, spokes: int) -> list[Source]:
+def create_ray_star(x, y, rotation_offset: float =0, spokes: int =1) -> list[Source]:
     #Input protection
     if spokes < 0:
         raise Exception("Cannot have a negative number of spokes")
@@ -41,5 +41,5 @@ def create_ray_star(x, y, spokes: int) -> list[Source]:
     output_ray_sources = []
     d_angle = 360 / spokes
     for n in range(spokes):
-        output_ray_sources.append(Source(x, y, (d_angle*n)%360))
+        output_ray_sources.append(Source(x, y, (d_angle*n)%360 + rotation_offset))
     return output_ray_sources
