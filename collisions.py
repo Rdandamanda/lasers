@@ -49,6 +49,9 @@ def _collide_seg_line(seg_x, seg_y, seg_angle, line_x1, line_y1, line_x2, line_y
     if denominator == 0:
         print("Denominator is 0, parallel or even coincident. Returning {\"boolean\": False}")
         return {"boolean": False}
+    if False and vector2[0] == 0:
+        print("Vector x is zero, returning False")
+        return {"boolean": False}
 
     ua = ((line_x2 - line_x1) * (seg_y - line_y1) - (line_y2 - line_y1) * (seg_x - line_x1)) / (denominator + 1e-16) # TODO: Handle division by zero
     ub = (vector2[0] * (seg_y - line_y1) - vector1[1] * (seg_x - line_x1)) / (denominator + 1e-16)
@@ -57,39 +60,56 @@ def _collide_seg_line(seg_x, seg_y, seg_angle, line_x1, line_y1, line_x2, line_y
     #print(f"{line_y1} (line_y1) + {ub} (ub) * {vector2[1]} (vector2[1]) = {y} (y)")
     return_dict["x"] = x
     return_dict["y"] = y
-    parameter_a = (x - seg_x) / vector1[0]
-    parameter_b = (x - line_x1) / vector2[0]
+    parameter_a = (x - seg_x) / (vector1[0] + 1e-16)
+    parameter_b = (x - line_x1) / (vector2[0] + 1e-16)
 
     return_dict["boolean"] = True if (parameter_a >= 0) and (parameter_b >= 0 and parameter_b <= 1) else False
     return_dict["resulting_segments"] = []
     print("Yes" if return_dict["boolean"] == True else "No", parameter_a)
 
+    return_dict["distance_from_start"] = _distance(seg_x, seg_y, x, y)
+
     return return_dict
-    
-def collide_line_box(line_x, line_y, line_angle, box_x1, box_y1, box_x2, box_y2) -> dict:
+
+def collide_seg_box(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y2) -> dict:
     return_dict = {}
 
-    if line_x > box_x1 and line_x < box_x2  and  line_y > box_y1 and line_y < box_y2: # The line originates in the box
+    # TODO: Decide what to do when hitting the exact corner of the box
+
+    # Determine the collision type. This bit is a point-and-box collision
+    if seg_x > box_x1 and seg_x < box_x2  and  seg_y > box_y1 and seg_y < box_y2: # The segment originates in the box
         return_dict["type"] = "internal"
-    elif (line_x == box_x1 or line_x == box_x2  and  line_y == box_y1 or line_y == box_y2): # The line originates on the edge of the box
+    elif (seg_x == box_x1 or seg_x == box_x2  and  seg_y == box_y1 or seg_y == box_y2): # The segment originates on the edge of the box
         return_dict["type"] = "edge"
-    elif line_x < box_x1 or line_x > box_x2 or line_y < box_y1 or line_y > box_y2: # The line originates outside of the box
+    elif seg_x < box_x1 or seg_x > box_x2 or seg_y < box_y1 or seg_y > box_y2: # The segment originates outside of the box
         return_dict["type"] = "external"
     else: # For testing, to catch in case I'm not testing edge cases correctly
         raise Exception("Edge case in point-and-box collision")
     
+    # Get collision with each of the four lines
     candidate_collisions = []
-    candidate_collisions.append(_collide_seg_line(line_x, line_y, line_angle, box_x1, box_y1, box_x2, box_y1))
-    accepted_collision = candidate_collisions[0]
-    if accepted_collision["boolean"] == False:
-        return {"boolean": False} # TODO: Change
+    for candidate_collision in [
+    _collide_seg_line(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y1), # Top horizontal line (lower y than the bottom one)
+    _collide_seg_line(seg_x, seg_y, seg_angle, box_x1, box_y2, box_x2, box_y2), # Bottom horizontal line (higher y than the top one)
+    _collide_seg_line(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x1, box_y2), # Left vertical line
+    _collide_seg_line(seg_x, seg_y, seg_angle, box_x2, box_y1, box_x2, box_y2)  # Right vertical line
+    ]:
+        if candidate_collision["boolean"] == True:
+            candidate_collisions.append(candidate_collision)
 
-    """return_dict["boolean"] = True
+    if candidate_collisions == []:
+        return{"boolean": False}
+    accepted_collision = min(candidate_collisions, key= lambda collision: collision["distance_from_start"])
+    if accepted_collision["boolean"] == False: # TODO: Change
+        return {"boolean": False}
+
+    # TODO: Change
+    return_dict["boolean"] = True
     return_dict["resulting_segments"] = []
     return_dict["x"] = accepted_collision["x"]
-    return_dict["y"] = accepted_collision["y"]"""
+    return_dict["y"] = accepted_collision["y"]
     return_dict = accepted_collision
-    return_dict["distance_from_start"] = _distance(line_x, line_y, return_dict["x"], return_dict["y"])
+    return_dict["distance_from_start"] = _distance(seg_x, seg_y, return_dict["x"], return_dict["y"])
 
     print(f"Returning collision dictionary {return_dict}")
     return return_dict

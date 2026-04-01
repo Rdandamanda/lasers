@@ -1,5 +1,5 @@
 from core_classes import *
-from collisions import collide_line_box
+from collisions import collide_seg_box
 
 class Glass_Rectangle(Interactor):
     def __init__(self, parent_screen, x0, y0, x1, y1):
@@ -24,8 +24,8 @@ class Glass_Rectangle(Interactor):
         # TODO: This can eventually be switched out for a materials system, for easier and cleaner-defined defaults and convenient customisation in the GUI
     def __str__(self):
         return "Glass Rectangle"
-    def get_collision(self, ray: Segment) -> dict:
-        return collide_line_box(ray.start_x, ray.start_y, ray.angle, self.x0, self.y0, self.x1, self.y1)
+    def get_collision(self, segment: Segment) -> dict:
+        return collide_seg_box(segment.start_x, segment.start_y, segment.angle, self.x0, self.y0, self.x1, self.y1)
     def plot_self(self):
         screen = self.parent_screen
         # Deletes this object off that canvas
