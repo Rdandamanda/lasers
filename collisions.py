@@ -97,21 +97,23 @@ def collide_seg_box(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y2) -> 
         if candidate_collision["boolean"] == True:
             candidate_collisions.append(candidate_collision)
 
+    # If empty, no collision
     if candidate_collisions == []:
         return{"boolean": False}
+    
+    # Accept nearest collision
     accepted_collision = min(candidate_collisions, key= lambda collision: collision["distance_from_start"])
-    if accepted_collision["boolean"] == False: # TODO: Change
-        return {"boolean": False}
 
-    # TODO: Change
-    return_dict["boolean"] = True
-    return_dict["resulting_segments"] = []
+    # Correctly set up the return dictionary
+    return_dict["boolean"] = True # If this code is reached, a collision that has boolean:True was accepted
     return_dict["x"] = accepted_collision["x"]
     return_dict["y"] = accepted_collision["y"]
-    return_dict = accepted_collision
     return_dict["distance_from_start"] = _distance(seg_x, seg_y, return_dict["x"], return_dict["y"])
+    
+    # One thing left, the resulting segments
+    return_dict["resulting_segments"] = [] # TODO: Add snell's law here
 
-    print(f"Returning collision dictionary {return_dict}")
+    #print(f"Returning collision dictionary {return_dict}") # TODO: Add more debug constants
     return return_dict
 
 if __name__ == "__main__":
