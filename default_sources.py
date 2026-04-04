@@ -41,5 +41,5 @@ def create_ray_star(x, y, rotation_offset: float =0, spokes: int =1) -> list[Sou
     output_ray_sources = []
     d_angle = 360 / spokes
     for n in range(spokes):
-        output_ray_sources.append(Source(x, y, (d_angle*n)%360 + rotation_offset))
+        output_ray_sources.append(Source(x, y, ( (d_angle*n) + rotation_offset )%360))
     return output_ray_sources

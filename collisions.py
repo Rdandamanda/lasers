@@ -43,29 +43,30 @@ def _collide_line_line(x1, y1, x2, y2, x3, y3, x4, y4) -> dict:
 def _collide_seg_line(seg_x, seg_y, seg_angle, line_x1, line_y1, line_x2, line_y2) -> dict:
     return_dict = {}
 
-    vector1 = _angle_to_vector(seg_angle)
-    vector2 = (line_x2 - line_x1, line_y2 - line_y1)
-    denominator = vector1[0] * vector2[1] - vector2[0] * vector1[1]
+    # Do intermediate calculations 1
+    vector_seg = _angle_to_vector(seg_angle)
+    vector_line = (line_x2 - line_x1, line_y2 - line_y1)
+    denominator = vector_seg[0] * vector_line[1] - vector_line[0] * vector_seg[1]
+
+    # Detect pararell and coincident lines that do not collide
     if denominator == 0:
-        print("Denominator is 0, parallel or even coincident. Returning {\"boolean\": False}")
-        return {"boolean": False}
-    if False and vector2[0] == 0:
-        print("Vector x is zero, returning False")
+        #print("Denominator is 0, parallel, or coincident while not actually on the box edge. Returning {\"boolean\": False}")
         return {"boolean": False}
 
-    ua = ((line_x2 - line_x1) * (seg_y - line_y1) - (line_y2 - line_y1) * (seg_x - line_x1)) / (denominator + 1e-16) # TODO: Handle division by zero
-    ub = (vector2[0] * (seg_y - line_y1) - vector1[1] * (seg_x - line_x1)) / (denominator + 1e-16)
-    x = seg_x + ua * (vector1[0])
-    y = line_y1 + ub * (vector2[1])
-    #print(f"{line_y1} (line_y1) + {ub} (ub) * {vector2[1]} (vector2[1]) = {y} (y)")
+    ua = (vector_line[0] * (seg_y - line_y1) - vector_line[1] * (seg_x - line_x1)) / (denominator)
+    #ub = (vector_seg[0] * (seg_y - line_y1) - vector_seg[1] * (seg_x - line_x1)) / (denominator)
+    x = seg_x + ua * (vector_seg[0])
+    y = seg_y + ua * (vector_seg[1])
+    #print(f"{line_y1} (line_y1) + {ub} (ub) * {vector_line[1]} (vector_line[1]) = {y} (y)")
     return_dict["x"] = x
     return_dict["y"] = y
-    parameter_a = (x - seg_x) / (vector1[0] + 1e-16)
-    parameter_b = (x - line_x1) / (vector2[0] + 1e-16)
+    parameter_a = (x - seg_x) / (vector_seg[0]) if vector_seg[0] != 0 else (y - seg_y) / (vector_seg[1]) # The right calculation is in case segment is vertical
+    parameter_b = (x - line_x1) / (vector_line[0]) if vector_line[0] != 0 else (y - line_y1) / (vector_line[1]) # The right calculation is in case line is vertical
 
+    # Set the collision as collided if the segment's vector goes in the correct direction and the point is in range on the line
     return_dict["boolean"] = True if (parameter_a >= 0) and (parameter_b >= 0 and parameter_b <= 1) else False
-    return_dict["resulting_segments"] = []
-    print("Yes" if return_dict["boolean"] == True else "No", parameter_a)
+    #return_dict["resulting_segments"] = [] # TODO: Add Snell's law
+    #print("Yes" if return_dict["boolean"] == True else "No", parameter_a)
 
     return_dict["distance_from_start"] = _distance(seg_x, seg_y, x, y)
 
@@ -81,6 +82,7 @@ def collide_seg_box(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y2) -> 
         return_dict["type"] = "internal"
     elif (seg_x == box_x1 or seg_x == box_x2  and  seg_y == box_y1 or seg_y == box_y2): # The segment originates on the edge of the box
         return_dict["type"] = "edge"
+        # TODO: add handling of edge collisions
     elif seg_x < box_x1 or seg_x > box_x2 or seg_y < box_y1 or seg_y > box_y2: # The segment originates outside of the box
         return_dict["type"] = "external"
     else: # For testing, to catch in case I'm not testing edge cases correctly
@@ -118,6 +120,6 @@ def collide_seg_box(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y2) -> 
 
 if __name__ == "__main__":
     # TODO: Add test cases here
-    pass
-    #print(_collide_line_line(0, 0, 0, 1, 45, -45))
     print(_collide_seg_line(0, 0, 45, 0, 6, 1, 5))
+    for x in range(0, 360, 45):
+        print(_angle_to_vector(x))
