@@ -89,7 +89,8 @@ def collide_seg_box(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y2) -> 
     return return_dict
 
 if __name__ == "__main__":
-    # TODO: Add test cases here
-    print(_collide_seg_line(0, 0, 45, 0, 6, 1, 5))
-    for x in range(0, 360, 45):
-        print(_angle_to_vector(x))
+    print("Testing conversion of angles to vectors:")
+    for x in range(0, 360, 90):
+        x = x + 45 + 360 # To test angles that are over 360
+        vector = _angle_to_vector(x)
+        print(f"Angle: {x} Vector: ({round(vector[0], 1)}, {round(vector[1], 1)})")
