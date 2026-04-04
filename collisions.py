@@ -7,39 +7,6 @@ def _angle_to_vector(angle) -> tuple[int, int]:
 def _distance(x1, y1, x2, y2) -> float: # Distance between two points as per the Pythagorean theorem
     return sqrt((x2-x1)**2 + (y2-y1)**2)
 
-def _collide_seg_seg(x1, y1, x2, y2, angle1, angle2) -> dict:
-    x1, x3 = x1, x2
-    y1, y3 = y1, y2
-    vector1 = _angle_to_vector(angle1)
-    vector2 = _angle_to_vector(angle2)
-    x2 = x1 + vector1[0]
-    x4 = x3 + vector2[0]
-    y2 = y1 + vector1[1]
-    y4 = y3 + vector2[1]
-    print(x1, x2, x3, x4)
-    print(y1, y2, y3, y4)
-
-    denominator = vector1[0] * vector2[1] - vector2[0] * vector1[1]
-    print(denominator)
-    
-    ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / (denominator + 1e-16)
-    ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / (denominator + 1e-16)
-    x = x1 + ua * (x2 - x1)
-    y = y1 + ua * (y2 - y1)
-    return [x, y]
-
-def _collide_line_line(x1, y1, x2, y2, x3, y3, x4, y4) -> dict:
-    vector1 = (x2 - x1, y2 - y1)
-    vector2 = (x4 - x3, y4 - y3)
-    denominator = vector1[0] * vector2[1] - vector2[0] * vector1[1]
-    print(denominator)
-    
-    ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / (denominator + 1e-16)
-    ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / (denominator + 1e-16)
-    x = x1 + ua * (x2 - x1)
-    y = y1 + ua * (y2 - y1)
-    return [x, y]
-
 def _collide_seg_line(seg_x, seg_y, seg_angle, line_x1, line_y1, line_x2, line_y2) -> dict:
     return_dict = {}
 
@@ -53,21 +20,24 @@ def _collide_seg_line(seg_x, seg_y, seg_angle, line_x1, line_y1, line_x2, line_y
         #print("Denominator is 0, parallel, or coincident while not actually on the box edge. Returning {\"boolean\": False}")
         return {"boolean": False}
 
+    # Do intermediate calculations 2
     ua = (vector_line[0] * (seg_y - line_y1) - vector_line[1] * (seg_x - line_x1)) / (denominator)
-    #ub = (vector_seg[0] * (seg_y - line_y1) - vector_seg[1] * (seg_x - line_x1)) / (denominator)
+
+    # Do final calculation
     x = seg_x + ua * (vector_seg[0])
     y = seg_y + ua * (vector_seg[1])
-    #print(f"{line_y1} (line_y1) + {ub} (ub) * {vector_line[1]} (vector_line[1]) = {y} (y)")
-    return_dict["x"] = x
-    return_dict["y"] = y
+
+    # Detect lack of collision
     parameter_a = (x - seg_x) / (vector_seg[0]) if vector_seg[0] != 0 else (y - seg_y) / (vector_seg[1]) # The right calculation is in case segment is vertical
     parameter_b = (x - line_x1) / (vector_line[0]) if vector_line[0] != 0 else (y - line_y1) / (vector_line[1]) # The right calculation is in case line is vertical
+    if (parameter_a >= 0) and (parameter_b >= 0 and parameter_b <= 1): # Set the collision as collided if the segment's vector goes in the correct direction and the point is in range on the line
+        return_dict["boolean"] = True
+    else: # Else, return no collision
+        return {"boolean": False}
 
-    # Set the collision as collided if the segment's vector goes in the correct direction and the point is in range on the line
-    return_dict["boolean"] = True if (parameter_a >= 0) and (parameter_b >= 0 and parameter_b <= 1) else False
-    #return_dict["resulting_segments"] = [] # TODO: Add Snell's law
-    #print("Yes" if return_dict["boolean"] == True else "No", parameter_a)
-
+    # Fill in the return dictionary with correct values
+    return_dict["x"] = x
+    return_dict["y"] = y
     return_dict["distance_from_start"] = _distance(seg_x, seg_y, x, y)
 
     return return_dict
