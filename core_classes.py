@@ -27,11 +27,13 @@ class Segment:
         self._end_x: int | None = end_x
         self._end_y: int | None = end_y
         self.visible: bool = visible
+        self.last_collided_interactor = None
+        self.last_collided_line = None
     def __str__(self):
         return f"Segment with X: {self.start_x} Y: {self.start_y} Angle: {self.angle}"
     def specify_end(self, x, y) -> None:
-        self.end_x = x
-        self.end_y = y
+        self._end_x = x
+        self._end_y = y
         self._end_specified = True
 
 class Interactor: # For type annotations
@@ -61,7 +63,7 @@ class Source:
         self.generated_segments: list[Segment] = []
     def __str__(self) -> str:
         return f"Source with X: {self.x} Y: {self.y} Angle: {self.angle} Number of segments: {len(self.generated_segments)}"
-    def generate_segments(self, parent_screen: Screen) -> None: # Alters self.generated_segments
+    def generate_segments(self, parent_screen: Screen) -> None: # Alters self.generated_segments. This function is a bit of a mess, but it is commented and isn't too bad
         self.generated_segments = []
 
         # Initial segment
@@ -80,22 +82,29 @@ class Source:
                 if candidate_collision["boolean"] == True: # If the collision succeeded, add it to the list of candidate collisions
                     candidate_collisions.append(candidate_collision)
             # At this point, the candidate_collisions list is complete
+            #print(F"Candidate: {candidate_collisions}")
             if candidate_collisions == []: # TODO: Make sure this is correct
                 pass
             else:
                 accepted_collision = min(candidate_collisions, key=lambda collision: collision["distance_from_start"]) # Gets the collision closest to the segment's origin
                 for new_segment in accepted_collision["resulting_segments"]:
+                    new_segment: Segment = new_segment
+                    new_segment.last_collided_interactor = accepted_collision["origin_interactor"]
+                    new_segment.last_collided_line = accepted_collision["origin_line"]
+                    #print("Set last interactor and line to ", new_segment.last_collided_interactor, new_segment.last_collided_line)
                     self.generated_segments.append(new_segment)
-                """ # TODO: Re-add this
-                            # Guard against having too many segments. If max_segments reached, set last segment as invisible and break
-                            if len(self.generated_segments) >= constants.max_segments:
-                                self.generated_segments[-1].visible = False
-                                if constants.debug_level:
-                                    print(f"WARN: Max segments limit ({constants.max_segments}) reached when colliding with {interactor}")
-                                break
-                    if len(self.generated_segments) >= constants.max_segments: # If max_segments reached, stop going through more interactors
-                        break"""
+                    # Guard against surpassing constants.max_segments
+                    if len(self.generated_segments) >= constants.max_segments:
+                        self.generated_segments[-1].visible = False # Set last added segment as invisible # TODO: Change to setting all segments added in this batch as invisible
+                        break # Stop adding more segments
                 self.generated_segments[solving_index].specify_end(accepted_collision["x"], accepted_collision["y"])
+                if len(self.generated_segments) >= constants.max_segments: # If max_segments reached, stop going through more interactors
+                    if constants.debug_level:
+                            print(f"WARN: Max segments limit ({constants.max_segments}) reached when colliding with {interactor}")
+                            #print("This segment: {vars(self)}, generated segments:")
+                            #for s in self.generated_segments:
+                                #print(vars(s))
+                    break
             solving_index += 1 # Goes to the next Segment
 
 class Screen:
@@ -169,7 +178,7 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
     screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
 def render_specified_line(canvas: tk.Canvas, segment: Segment) -> None:
-    canvas.create_line(segment.start_x, segment.start_y, segment.end_x, segment.end_y, fill=constants.color_line_standard, tags="line")
+    canvas.create_line(segment.start_x, segment.start_y, segment._end_x, segment._end_y, fill=constants.color_line_standard, tags="line")
 
 def render_terminal_line(canvas: tk.Canvas, segment: Segment) -> None:
     # TODO: Improve, probably by splitting into 90-degree ranges. Or at least check for errors and make into a separate function.

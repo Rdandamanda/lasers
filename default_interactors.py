@@ -25,7 +25,12 @@ class Glass_Rectangle(Interactor):
     def __str__(self):
         return "Glass Rectangle"
     def get_collision(self, segment: Segment) -> dict:
-        return collide_seg_box(segment.start_x, segment.start_y, segment.angle, self.x0, self.y0, self.x1, self.y1)
+        same_interactor = True if segment.last_collided_interactor == self else False
+        return_dict = collide_seg_box(segment.start_x, segment.start_y, segment.angle, self.x0, self.y0, self.x1, self.y1, same_interactor, segment.last_collided_line)
+        return_dict["origin_interactor"] = self
+        if return_dict.get("origin_line") == None:
+            return_dict["origin_line"] = None
+        return return_dict
     def plot_self(self):
         screen = self.parent_screen
         # Deletes this object off that canvas

@@ -74,7 +74,7 @@ if __name__ == "__main__":
         #bind_ray_star_to(startup_Screen.tk_canvas, startup_Screen)
 
         # Populating it with objects
-        for source in create_ray_star(300, 140, 45, 55):
+        for source in create_ray_star(300, 140, 90, 64):
             startup_Screen.ray_sources.append(source)
         startup_Screen.ray_interactors.append(o := Glass_Rectangle(startup_Screen, 200, 200, 500, 350))
         #startup_Screen.tk_canvas.tag_bind(o.canvas_rectangle, "<Enter>", on_enter)

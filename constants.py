@@ -10,7 +10,7 @@ star_spokes_power_of_2 = 8
 # Debug and limits:
 debug_level = 1 # 1: Warnings
 debug_background_colors = False # Gives vibrant colours to frames that shouldn't have visible backgrounds
-max_segments = 20
+max_segments = 20 # Maximum number of segments per source
 
 # Customisation
 color_line_standard = "blue"
