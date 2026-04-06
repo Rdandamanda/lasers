@@ -178,8 +178,8 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
     # Update the text on the Label
     screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
-def update_editing_panel(event_, screen: Screen) -> None:
-    screen.lfr_editing.configure(text=constants.editing_item)
+def update_editing_panel(screen: Screen) -> None:
+    screen.lfr_editing.configure(text=f"Editování objektu: {constants.editing_item.__str__()}")
     
 def render_specified_line(canvas: tk.Canvas, segment: Segment) -> None:
     canvas.create_line(segment.start_x, segment.start_y, segment._end_x, segment._end_y, fill=constants.color_line_standard, tags="line")

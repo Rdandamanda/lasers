@@ -1,5 +1,5 @@
 import constants
-from core_classes import Screen
+from core_classes import Screen, update_editing_panel
 from tkinter import Event
 
 def on_enter(event):
@@ -35,6 +35,13 @@ def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in 
         constants.selected_internal_objects.append( screen.ID_to_interactor_dict[id] )
         
     constants.selection_original_coords = (event.x, event.y)
+
+    # Set the item for the editing panel
+    if constants.selected_internal_objects == []:
+        constants.editing_item = ""
+    else:
+        constants.editing_item = constants.selected_internal_objects[0]
+    update_editing_panel(screen)
 
 def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the given screen and calls for an update
     # Doesn't need to run if nothing is being dragged
