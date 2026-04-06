@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # The debug screen
     if load_debug_screen == True:
         # Tab setup
-        screen_dict: dict = {"lbl_debug": lbl_debug}
+        screen_dict: dict = {"lbl_debug": lbl_debug, "lfr_editing": lfr_editing}
         startup_Screen = Screen(neccessary_references=screen_dict)
         ntb_Screens.add(startup_Screen.tk_frame, text="Testovací plocha")
 
@@ -83,7 +83,7 @@ if __name__ == "__main__":
 
         # Solve and draw
         startup_Screen.solve_all_sources()
-        startup_Screen.plot_all()
+        startup_Screen.plot_all_interactors()
 
     # Stuff for showing off the tabs. New screens, differentiated by colour. Happy with the high ease of adding them
     if load_extra_debug_screens == True:

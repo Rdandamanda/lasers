@@ -8,7 +8,7 @@ def _angle_to_vector(angle) -> tuple[int, int]:
     if False and x < 1e-16:
         x = 0
     if False and y < 1e-16:
-        y = 0
+        y = 0   
     return (x, y)
 
 def _distance(x1, y1, x2, y2) -> float: # Distance between two points as per the Pythagorean theorem
@@ -96,7 +96,7 @@ def collide_seg_box(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y2, sam
     elif (seg_x == box_x1 or seg_x == box_x2) or (seg_y == box_y1 or seg_y == box_y2): # The segment originates on the edge of the box
         return_dict["type"] = "edge"
         #print("WARN")
-        return{"boolean": False}
+        return{"boolean": False} # TODO: This might be what is messing up the internal reflections
         # TODO: add handling of edge collisions
     elif seg_x < box_x1 or seg_x > box_x2 or seg_y < box_y1 or seg_y > box_y2: # The segment originates outside of the box
         return_dict["type"] = "external"

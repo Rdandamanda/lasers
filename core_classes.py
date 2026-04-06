@@ -131,6 +131,7 @@ class Screen:
 
         # Unpack neccessary references dictionary
         self.lbl_debug: tk.Label = neccessary_references["lbl_debug"]
+        self.lfr_editing: tk.LabelFrame = neccessary_references["lfr_editing"]
 
         # Binding
         from drag_and_drop import on_mouse_grab, on_mouse_drag # This is here because drag_and_drop depends on Screen and others... Not sure how come this works
@@ -177,6 +178,9 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
     # Update the text on the Label
     screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
+def update_editing_panel(event_, screen: Screen) -> None:
+    screen.lfr_editing.configure(text=constants.editing_item)
+    
 def render_specified_line(canvas: tk.Canvas, segment: Segment) -> None:
     canvas.create_line(segment.start_x, segment.start_y, segment._end_x, segment._end_y, fill=constants.color_line_standard, tags="line")
 
