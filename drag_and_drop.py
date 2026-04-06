@@ -38,7 +38,7 @@ def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in 
 
     # Set the item for the editing panel
     if constants.selected_internal_objects == []:
-        constants.editing_item = ""
+        constants.editing_item = None
     else:
         constants.editing_item = constants.selected_internal_objects[0]
     update_editing_panel(screen)

@@ -2,7 +2,7 @@ from core_classes import *
 from collisions import collide_seg_box
 
 class Glass_Rectangle(Interactor):
-    def __init__(self, parent_screen, x0, y0, x1, y1):
+    def __init__(self, parent_screen, x0, y0, x1, y1, editing_name: str ="Objekt", editing_type: str = "Objekt"):
         self.parent_screen = parent_screen
         # Ensures coordinates are in the correct order x0 <= x1; y0 <= y1
         # If they are the same (x0 == x1 or y0 == y1), it still warns, and still switches them (which has no effect), but lets them be the same
@@ -19,11 +19,18 @@ class Glass_Rectangle(Interactor):
         self.y1 = y1
         self.canvas_rectangle: int | None = None
         # Constants specific to this type of interactor - in this case, customisation colours
+        # TODO: This can eventually be switched out for a materials system, for easier and cleaner-defined defaults and convenient customisation in the GUI
         self.color_fill = "#CCCCCC"
         self.color_outline = "#E5E5E5"
-        # TODO: This can eventually be switched out for a materials system, for easier and cleaner-defined defaults and convenient customisation in the GUI
+        # attributes specific to the editing panel
+        self.editing_name: str = editing_name
+        self.editing_type: str = editing_type
     def __str__(self):
         return "Glass Rectangle"
+    def get_editing_name(self) -> str: # The name that should show up in the editing panel
+        return self.editing_name
+    def get_editing_type(self) -> str: # The type name that should show up in the editing panel
+        return self.editing_type
     def get_collision(self, segment: Segment) -> dict:
         same_interactor = True if segment.last_collided_interactor == self else False
         return_dict = collide_seg_box(segment.start_x, segment.start_y, segment.angle, self.x0, self.y0, self.x1, self.y1, same_interactor, segment.last_collided_line)

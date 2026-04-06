@@ -44,10 +44,16 @@ class Screen: # To allow this minimum skeleton to be used for type annotations. 
         assert False, "Method not meant to be run, class created only for type annotations"
 
 class Interactor: # Generic parent class that doesn't hold any functionality in itself
-    def __init__(self):
+    def __init__(self, editing_name: str ="Objekt", editing_type: str = "Objekt"):
         self.parent_screen: Screen
+        self.editing_name: str = editing_name
+        self.editing_type: str = editing_type
     def __str__(self):
         return "Generic Interactor"
+    def get_editing_name(self) -> str: # The name that should show up in the editing panel
+        return self.editing_name
+    def get_editing_type(self) -> str: # The type name that should show up in the editing panel
+        return self.editing_type
     def get_collision(self, segment: Segment) -> dict:
         return f"Collision of {segment} with {self}"
     def plot_self(self, screen: Screen) -> None: # Must delete the old canvas object and create a new one and register it with the screen
@@ -179,7 +185,22 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
     screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
 def update_editing_panel(screen: Screen) -> None:
-    screen.lfr_editing.configure(text=f"Editování objektu: {constants.editing_item.__str__()}")
+    editing_item = constants.editing_item
+    if editing_item == None:
+        screen.lfr_editing.configure(text="Editování objektu")
+        return
+    
+    try:
+        editing_name = editing_item.get_editing_name()
+    except Exception:
+        editing_name = "Jméno objektu nenalezeno"
+
+    try:
+        editing_type = editing_item.get_editing_type()
+    except Exception:
+        editing_type = "Typ objektu nenalezen"
+
+    screen.lfr_editing.configure(text=f"Editování objektu: {editing_name}")
     
 def render_specified_line(canvas: tk.Canvas, segment: Segment) -> None:
     canvas.create_line(segment.start_x, segment.start_y, segment._end_x, segment._end_y, fill=constants.color_line_standard, tags="line")
