@@ -184,7 +184,10 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
                 counts["other"] += 1
 
     # Update the text on the Label
-    screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
+    if constants.czech_debug_label:
+        screen.lbl_debug.configure(text=f"[Celkem:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Čáry:{str( counts['line'] ).rjust(constants.justify_digits)} | Obdélníky:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Jiné:{str( counts['other'] ).rjust(constants.justify_digits)}")
+    else:
+        screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
 def update_editing_panel(screen: Screen) -> None:
     editing_item = constants.editing_item

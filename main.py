@@ -9,7 +9,7 @@ do_os_check()
 if __name__ == "__main__":
     # GUI setup
     root = tk.Tk()
-    root.title("Ray optics tool")
+    root.title("Nástroj na paprskovou optiku")
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
     
