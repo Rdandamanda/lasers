@@ -57,8 +57,12 @@ if __name__ == "__main__":
     lfr_editing = tk.LabelFrame(master=frm_editing, text="Editování objektu")
     lfr_editing.grid(sticky="nsew", padx=(0, 5))
 
-    lbl_editing_name = tk.Label(master=lfr_editing, width=30, text="Typ objektu: (nevybráno)")
+    lbl_editing_type = tk.Label(master=lfr_editing, width=30, text="Typ objektu: (nevybráno)")
+    lbl_editing_type.grid(pady=(10, 0))
+    lbl_editing_name = tk.Label(master=lfr_editing, width=30, text="Jméno objektu: (nevybráno)")
     lbl_editing_name.grid(pady=(10, 0))
+    sep_editing_pane = ttk.Separator(master=lfr_editing)
+    sep_editing_pane.grid()
 
     grp_grip_right = ttk.Sizegrip(master=frm_editing)
     grp_grip_right.grid(column=0, row=1, sticky="se")
@@ -66,7 +70,7 @@ if __name__ == "__main__":
     # The debug screen
     if load_debug_screen == True:
         # Tab setup
-        screen_dict: dict = {"lbl_debug": lbl_debug, "lfr_editing": lfr_editing}
+        screen_dict: dict = {"lbl_debug": lbl_debug, "lfr_editing": lfr_editing, "lbl_editing_type": lbl_editing_type, "lbl_editing_name": lbl_editing_name}
         startup_Screen = Screen(neccessary_references=screen_dict)
         ntb_Screens.add(startup_Screen.tk_frame, text="Testovací plocha")
 

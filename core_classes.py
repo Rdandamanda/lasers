@@ -138,6 +138,8 @@ class Screen:
         # Unpack neccessary references dictionary
         self.lbl_debug: tk.Label = neccessary_references["lbl_debug"]
         self.lfr_editing: tk.LabelFrame = neccessary_references["lfr_editing"]
+        self.lbl_editing_type: tk.Label = neccessary_references["lbl_editing_type"]
+        self.lbl_editing_name: tk.Label = neccessary_references["lbl_editing_name"]
 
         # Binding
         from drag_and_drop import on_mouse_grab, on_mouse_drag # This is here because drag_and_drop depends on Screen and others... Not sure how come this works
@@ -188,6 +190,8 @@ def update_editing_panel(screen: Screen) -> None:
     editing_item = constants.editing_item
     if editing_item == None:
         screen.lfr_editing.configure(text="Editování objektu")
+        screen.lbl_editing_type.configure(text="Typ objektu: (nevybráno)")
+        screen.lbl_editing_name.configure(text="Jméno objektu: (nevybráno)")
         return
     
     try:
@@ -201,6 +205,8 @@ def update_editing_panel(screen: Screen) -> None:
         editing_type = "Typ objektu nenalezen"
 
     screen.lfr_editing.configure(text=f"Editování objektu: {editing_name}")
+    screen.lbl_editing_type.configure(text=editing_type)
+    screen.lbl_editing_name.configure(text=editing_name)
     
 def render_specified_line(canvas: tk.Canvas, segment: Segment) -> None:
     canvas.create_line(segment.start_x, segment.start_y, segment._end_x, segment._end_y, fill=constants.color_line_standard, tags="line")
