@@ -54,7 +54,7 @@ if __name__ == "__main__":
     frm_editing.columnconfigure(0, weight=1)
     pnw_panes.add(frm_editing, weight=0)
 
-    lfr_editing = tk.LabelFrame(master=frm_editing, text="Editování objektu")
+    lfr_editing = tk.LabelFrame(master=frm_editing, text="Detaily objektu")
     lfr_editing.grid(sticky="nsew", padx=(0, 5))
 
     lbl_editing_type = tk.Label(master=lfr_editing, width=30, text="Typ objektu: (nevybráno)")
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         # Tab setup
         screen_dict: dict = {"lbl_debug": lbl_debug, "lfr_editing": lfr_editing, "lbl_editing_type": lbl_editing_type, "lbl_editing_name": lbl_editing_name}
         startup_Screen = Screen(neccessary_references=screen_dict)
-        ntb_Screens.add(startup_Screen.tk_frame, text="Testovací plocha")
+        ntb_Screens.add(startup_Screen.tk_frame, text="Demo - zrcadlo")
 
         # Bind for getting mouse position
         #bind_ray_star_to(startup_Screen.tk_canvas, startup_Screen)
@@ -92,15 +92,35 @@ if __name__ == "__main__":
     # Stuff for showing off the tabs. New screens, differentiated by colour. Happy with the high ease of adding them
     if load_extra_debug_screens == True:
         startup_Screen1 = Screen(neccessary_references=screen_dict)
-        startup_Screen1.tk_canvas.configure(bg="yellow")
-        ntb_Screens.add(startup_Screen1.tk_frame, text="Další plocha")
-        startup_Screen1.solve_all_sources()
-        startup_Screen1.plot_all()
+        startup_Screen1.tk_canvas.configure(bg="#BBBBBB")
+        ntb_Screens.add(startup_Screen1.tk_frame, text="Demo - překážka")
         startup_Screen2 = Screen(neccessary_references=screen_dict)
-        startup_Screen2.tk_canvas.configure(bg="lavender")
-        ntb_Screens.add(startup_Screen2.tk_frame, text="Plocha 3")
-        startup_Screen2.solve_all_sources()
-        startup_Screen2.plot_all()
+        startup_Screen2.tk_canvas.configure(bg="#BFBFBF")
+        ntb_Screens.add(startup_Screen2.tk_frame, text="Demo - obojí")
+        startup_Screen3 = Screen(neccessary_references=screen_dict)
+        startup_Screen3.tk_canvas.configure(bg="#E0E0E0")
+        ntb_Screens.add(startup_Screen3.tk_frame, text="Volná plocha")
+        startup_Screen3.solve_all_sources()
+        startup_Screen3.plot_all()
+
+    # Populate the other demo tabs with items
+    for source in create_ray_star(300, 140, 0, 64):
+        startup_Screen1.ray_sources.append(source)
+    startup_Screen1.ray_interactors.append(Obstacle_Rectangle(startup_Screen1, 200, 200, 350, 500))
+    startup_Screen1.solve_all_sources()
+    startup_Screen1.plot_all_interactors()
+
+    for source in create_ray_star(115, 40, 18, 5):
+        startup_Screen2.ray_sources.append(source)
+    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, -25, 50, 50, 500))
+    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, 175, 50, 200, 500))
+    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 50, 250, 175, 375))
+    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 450, 100, 475, 125))
+    startup_Screen2.solve_all_sources()
+    startup_Screen2.plot_all_interactors()
+    
+    root.after(100, startup_Screen.solve_all_sources)
+    root.after(100, startup_Screen.plot_all_lines)
 
     root.mainloop()
     if constants.debug_level >= 1:

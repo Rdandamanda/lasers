@@ -195,7 +195,7 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
 def update_editing_panel(screen: Screen) -> None:
     editing_item = constants.editing_item
     if editing_item == None:
-        screen.lfr_editing.configure(text="Editování objektu")
+        screen.lfr_editing.configure(text="Detaily objektu")
         screen.lbl_editing_type.configure(text="Typ objektu: (nevybráno)")
         screen.lbl_editing_name.configure(text="Jméno objektu: (nevybráno)")
         return
@@ -210,7 +210,7 @@ def update_editing_panel(screen: Screen) -> None:
     except Exception:
         editing_type = "Typ objektu nenalezen"
 
-    screen.lfr_editing.configure(text=f"Editování objektu: {editing_name}")
+    screen.lfr_editing.configure(text=f"Detaily objektu: {editing_name}")
     screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
     screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
     
