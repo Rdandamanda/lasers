@@ -89,6 +89,7 @@ def collide_seg_box(seg_x, seg_y, seg_angle, box_x1, box_y1, box_x2, box_y2, sam
     # Determine the collision type. This bit is a point-and-box collision
     if seg_x > box_x1 and seg_x < box_x2  and  seg_y > box_y1 and seg_y < box_y2: # The segment originates in the box
         return_dict["type"] = "internal"
+        return{"boolean": True, "hide_original_segment": True, "distance_from_start": 0, "resulting_segments": [], "x": seg_x, "y": seg_y}
     elif (seg_x == box_x1 or seg_x == box_x2) and (seg_y == box_y1 or seg_y == box_y2): # The segment originates on the corner of the box
         return_dict["type"] = "corner"
         return{"boolean": False}

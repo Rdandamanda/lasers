@@ -2,7 +2,7 @@ from core_classes import *
 from collisions import collide_seg_box
 
 class Glass_Rectangle(Interactor):
-    def __init__(self, parent_screen, x0, y0, x1, y1, editing_name: str ="Objekt", editing_type: str = "Objekt"):
+    def __init__(self, parent_screen, x0, y0, x1, y1, editing_name: str ="Zrcadlo", editing_type: str = "Zrcadlo"):
         self.parent_screen = parent_screen
         # Ensures coordinates are in the correct order x0 <= x1; y0 <= y1
         # If they are the same (x0 == x1 or y0 == y1), it still warns, and still switches them (which has no effect), but lets them be the same

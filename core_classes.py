@@ -93,6 +93,9 @@ class Source:
                 pass
             else:
                 accepted_collision = min(candidate_collisions, key=lambda collision: collision["distance_from_start"]) # Gets the collision closest to the segment's origin
+                if accepted_collision.get("hide_original_segment") != None:
+                    if accepted_collision["hide_original_segment"]:
+                        self.generated_segments[solving_index].visible = False
                 for new_segment in accepted_collision["resulting_segments"]:
                     new_segment: Segment = new_segment
                     new_segment.last_collided_interactor = accepted_collision["origin_interactor"]
