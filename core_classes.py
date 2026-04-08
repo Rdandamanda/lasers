@@ -63,8 +63,6 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
 
 class Source:
     def __init__(self, x: int, y: int, angle: float) -> None:
-         # Input protection
-        angle = (angle + 1e-16) % 360
         self.x: int = x
         self.y: int = y
         self.angle: float = angle
