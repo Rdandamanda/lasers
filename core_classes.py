@@ -63,6 +63,8 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
 
 class Source:
     def __init__(self, x: int, y: int, angle: float) -> None:
+         # Input protection
+        angle = (angle + 1e-16) % 360
         self.x: int = x
         self.y: int = y
         self.angle: float = angle
@@ -211,8 +213,8 @@ def update_editing_panel(screen: Screen) -> None:
         editing_type = "Typ objektu nenalezen"
 
     screen.lfr_editing.configure(text=f"Editování objektu: {editing_name}")
-    screen.lbl_editing_type.configure(text=editing_type)
-    screen.lbl_editing_name.configure(text=editing_name)
+    screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
+    screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
     
 def render_specified_line(canvas: tk.Canvas, segment: Segment) -> None:
     canvas.create_line(segment.start_x, segment.start_y, segment._end_x, segment._end_y, fill=constants.color_line_standard, tags="line")

@@ -44,6 +44,8 @@ def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in 
     update_editing_panel(screen)
 
 def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the given screen and calls for an update
+    global edge
+    edge = 0
     # Doesn't need to run if nothing is being dragged
     if constants.selected_internal_objects == []:
         return
