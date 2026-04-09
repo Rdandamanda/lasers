@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     menubar = tk.Menu(root)
     root.configure(menu=menubar)
-    menubar.add_command(label="Soubor")
+    #menubar.add_command(label="Soubor")
     menubar.add_command(label="Zavřít", command=root.quit)
 
     pnw_panes = ttk.Panedwindow(master=root, orient=tk.HORIZONTAL)
@@ -119,8 +119,8 @@ if __name__ == "__main__":
     startup_Screen2.solve_all_sources()
     startup_Screen2.plot_all_interactors()
     
-    root.after(100, startup_Screen.solve_all_sources)
-    root.after(100, startup_Screen.plot_all_lines)
+    root.after(150, startup_Screen.solve_all_sources)
+    root.after(150, startup_Screen.plot_all_lines)
 
     root.mainloop()
     if constants.debug_level >= 1:
