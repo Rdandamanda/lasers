@@ -1,5 +1,6 @@
 from core_classes import *
 from collisions import collide_seg_box
+from random import randint
 
 class Glass_Rectangle(Interactor):
     def __init__(self, parent_screen, x0, y0, x1, y1, editing_name: str ="Zrcadlo", editing_type: str = "Zrcadlo"):
@@ -23,7 +24,7 @@ class Glass_Rectangle(Interactor):
         self.color_fill = "#CCCCCC"
         self.color_outline = "#E5E5E5"
         # attributes specific to the editing panel
-        self.editing_name: str = editing_name
+        self.editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
     def __str__(self):
         return "Glass Rectangle"
@@ -79,7 +80,7 @@ class Obstacle_Rectangle(Interactor):
         self.color_fill = "#000000"
         self.color_outline = "#000000"
         # attributes specific to the editing panel
-        self.editing_name: str = editing_name
+        self.editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
     def __str__(self):
         return "Obstacle Rectangle"
