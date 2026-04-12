@@ -2,10 +2,6 @@ import constants
 from core_classes import Screen, update_editing_panel
 from tkinter import Event
 
-def on_enter(event):
-    print("Running")
-    print(locals())
-
 def get_mouse_selected(event: Event, screen: Screen) -> list[int]:
     match constants.selection_mode:
         case "SINGLE_SELECT":
@@ -27,7 +23,8 @@ def get_mouse_selected(event: Event, screen: Screen) -> list[int]:
     
     return answer
 
-def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in the constants module # TODO: this sounds terrible, those should probably be moved somewhere else, maybe make something for my program that is like a Tk() in Tkinter
+def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in the constants module
+    # Get the selected items
     constants.selected_item_IDs = get_mouse_selected(event, screen)
 
     constants.selected_internal_objects = []
@@ -42,6 +39,9 @@ def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in 
     else:
         constants.editing_item = constants.selected_internal_objects[0]
     update_editing_panel(screen)
+
+    if constants.debug_selection:
+        print(f"selected_item_IDs = {constants.selected_item_IDs}\nselected_internal_objects = {constants.selected_internal_objects}\nediting_item = {constants.editing_item}\n- - -")
 
 def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the given screen and calls for an update
     # Doesn't need to run if nothing is being dragged

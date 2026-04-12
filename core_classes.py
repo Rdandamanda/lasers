@@ -153,8 +153,6 @@ class Screen:
     def get_all_interactors(self) -> list[Interactor]: # This is here so that it can be used when groups are added, since Screen.ray_interactors will only hold the interactors falling directly under it
         return self.ray_interactors
     def solve_all_sources(self) -> None:
-        if constants.debug_level >= 2:
-            print(f"Solving collisions for the {len(self.ray_sources)} Sources of this screen")
         for source in self.ray_sources:
             source.generate_segments(self)
     def plot_all_interactors(self) -> None:

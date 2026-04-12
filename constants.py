@@ -8,9 +8,20 @@ load_extra_debug_screens = True
 star_spokes_power_of_2 = 8
 
 # Debug and limits:
-debug_level = 1 # 1: Warnings
-debug_background_colors = False # Gives vibrant colours to frames that shouldn't have visible backgrounds
-max_segments = 20 # Maximum number of segments per source
+debug_any: bool = True # If False, turns off all debugging (except the exit message)
+debug_warnings: bool = True # Warnings in the console of type "WARN: "
+debug_background_colors: bool = True # Gives vibrant colours to frames that shouldn't have visible backgrounds
+debug_selection: bool = True # Prints currently selected and currently edited item(s) into the console any time anything is selected
+debug_exiting: bool = True # Whether to print the exit message upon successfully exiting the program
+exit_message = "Úspěšně ukončeno"
+
+max_segments: int = 20 # Maximum number of segments per source
+
+if debug_any == False:
+    debug_warnings = False
+    debug_background_colors = False
+    debug_selection = False
+    max_segments = max(max_segments, 200) # Makes max_segments at least 200
 
 # Customisation
 color_line_standard = "blue"
@@ -27,6 +38,7 @@ select_all_interactors_near_offset = 20
 lines_select_offset = 40
 
 ## Internal
+# Drag n' drop
 selection_mode = "SINGLE_SELECT" # "SELECT_ALL_INTERACTORS_NEAR", "LINES_SELECT"
 selected_item_IDs = []
 selected_internal_objects = []
