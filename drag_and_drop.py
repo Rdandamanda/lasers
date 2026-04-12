@@ -41,7 +41,9 @@ def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in 
     update_editing_panel(screen)
 
     if constants.debug_selection:
-        print(f"selected_item_IDs = {constants.selected_item_IDs}\nselected_internal_objects = {constants.selected_internal_objects}\nediting_item = {constants.editing_item}\n- - -")
+        len_1 = len(constants.selected_item_IDs)
+        len_2 = len(constants.selected_internal_objects)
+        print(f"{len_1} selected_item_IDs = {constants.selected_item_IDs}\n{len_2} selected_internal_objects = {constants.selected_internal_objects}\nediting_item = {constants.editing_item}\n- - -")
 
 def on_mouse_drag(event: Event, screen: Screen) -> None: # Moves stuff on the given screen and calls for an update
     # Doesn't need to run if nothing is being dragged

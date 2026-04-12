@@ -27,7 +27,7 @@ class Glass_Rectangle(Interactor):
         self.editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
     def __str__(self):
-        return "Glass Rectangle"
+        return f"Glass Rectangle ({self.editing_name})"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
         return self.editing_name
     def get_editing_type(self) -> str: # The type name that should show up in the editing panel
@@ -83,7 +83,7 @@ class Obstacle_Rectangle(Interactor):
         self.editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
     def __str__(self):
-        return "Obstacle Rectangle"
+        return f"Obstacle Rectangle ({self.editing_name})"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
         return self.editing_name
     def get_editing_type(self) -> str: # The type name that should show up in the editing panel
