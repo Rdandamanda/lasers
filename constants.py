@@ -34,12 +34,12 @@ if czech_debug_label:
 
 # Selection behaviour
 single_select_offset = 0
-select_all_interactors_near_offset = 20
-lines_select_offset = 40
+multi_select_offset = 0
+lines_select_offset = 10
 
 ## Internal
 # Drag n' drop
-selection_mode = "SINGLE_SELECT" # "SELECT_ALL_INTERACTORS_NEAR", "LINES_SELECT"
+selection_mode = "SINGLE" # "SINGLE": drags and edits one interactor, "MULTI": drags all under cursor, finds topmost for editing, "LINES": selects lines
 selected_item_IDs = []
 selected_internal_objects = []
 selection_original_coords = (None, None)
