@@ -212,6 +212,13 @@ def update_editing_panel(screen: Screen) -> None:
     screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
     screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
     
+def choose_selection_mode(event_, mode) -> None: # Is run whenever the ComboBox is used
+    mode = ["SINGLE", "MULTI", "LINES"][mode] # This is the first time I've used, or, well, even seen this notation. Neat!
+    constants.selection_mode = mode
+
+    if constants.debug_selection:
+        print(f"\"{mode}\" mode selected")
+
 def render_specified_line(canvas: tk.Canvas, segment: Segment) -> None:
     canvas.create_line(segment.start_x, segment.start_y, segment._end_x, segment._end_y, fill=constants.color_line_standard, tags="line")
 

@@ -10,7 +10,7 @@ star_spokes_power_of_2 = 8
 # Debug and limits:
 debug_any: bool = True # Master option. If False, turns off all debugging (except the exit message)
 debug_warnings: bool = True # Warnings in the console of type "WARN: "
-debug_background_colors: bool = True # Gives vibrant colours to frames that shouldn't have visible backgrounds
+debug_background_colors: bool = False # Gives vibrant colours to frames that shouldn't have visible backgrounds
 debug_selection: bool = True # Prints currently selected and currently edited item(s) into the console any time anything is selected
 debug_exiting: bool = True # Whether to print the exit message upon successfully exiting the program
 exit_message = "Úspěšně ukončeno"

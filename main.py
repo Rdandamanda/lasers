@@ -11,16 +11,33 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("Nástroj na paprskovou optiku")
     root.columnconfigure(0, weight=1)
-    root.rowconfigure(0, weight=1)
+    root.rowconfigure(0, weight=0)
+    root.rowconfigure(1, weight=1)
     
     font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
 
+    # Menu bar (upper, thin)
     menubar = tk.Menu(root)
     root.configure(menu=menubar)
     menubar.add_command(label="Zavřít", command=root.quit)
 
+    # Tool bar (lower, with custom buttons)
+    frm_toolbar = tk.Frame(root)
+    frm_toolbar.grid(row=0, column=0, sticky="ew")
+    if constants.debug_background_colors:
+        frm_toolbar.configure(bg="green")
+
+    # Selection mode selection
+    lbl_selection_label = tk.Label(master=frm_toolbar, text="Režim výběru: ")
+    lbl_selection_label.grid(row=0, column=0, padx=(3, 0), pady=3)
+    var_selection_mode = tk.StringVar()
+    cbb_selection_mode = ttk.Combobox(master=frm_toolbar, values=["Vrchní objekt", "Všechny pod kurzorem", "Segmenty čar"], state="readonly", textvariable=var_selection_mode)
+    cbb_selection_mode.grid(row=0, column=1, padx=(3, 0), pady=3)
+    cbb_selection_mode.bind("<<ComboboxSelected>>", lambda event_: choose_selection_mode(event_, cbb_selection_mode.current()))
+    cbb_selection_mode.current(0) # Set the default value as the first in the list
+
     pnw_panes = ttk.Panedwindow(master=root, orient=tk.HORIZONTAL)
-    pnw_panes.grid(sticky="nsew", row=0, column=0)
+    pnw_panes.grid(sticky="nsew", row=1, column=0)
 
     # Left pane
     tvw_objects = ttk.Treeview()
