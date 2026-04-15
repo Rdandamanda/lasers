@@ -8,7 +8,7 @@ class Glass_Rectangle(Interactor):
         # Ensures coordinates are in the correct order x0 <= x1; y0 <= y1
         # If they are the same (x0 == x1 or y0 == y1), it still warns, and still switches them (which has no effect), but lets them be the same
         if x0 >= x1 or y0 >= y1:
-            if constants.debug_level >= 1:
+            if constants.debug_warnings:
                 print("WARN: Rectangle coordinates specified in the wrong order or are the same")
             if x0 >= x1:
                 x0, x1 = x1, x0
@@ -23,13 +23,17 @@ class Glass_Rectangle(Interactor):
         # TODO: This can eventually be switched out for a materials system, for easier and cleaner-defined defaults and convenient customisation in the GUI
         self.color_fill = "#CCCCCC"
         self.color_outline = "#E5E5E5"
+
         # attributes specific to the editing panel
-        self.editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
+        self._editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
+        self.editing_setup_info: list[dict] = [{"attribute_label": "Jméno objektu", "setter": self.set_editing_name}]
     def __str__(self):
-        return f"Glass Rectangle ({self.editing_name})"
+        return f"Glass Rectangle ({self._editing_name})"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
-        return self.editing_name
+        return self._editing_name
+    def set_editing_name(self, name) -> None:
+        self._editing_name = name
     def get_editing_type(self) -> str: # The type name that should show up in the editing panel
         return self.editing_type
     def get_collision(self, segment: Segment) -> dict:
@@ -64,7 +68,7 @@ class Obstacle_Rectangle(Interactor):
         # Ensures coordinates are in the correct order x0 <= x1; y0 <= y1
         # If they are the same (x0 == x1 or y0 == y1), it still warns, and still switches them (which has no effect), but lets them be the same
         if x0 >= x1 or y0 >= y1:
-            if constants.debug_level >= 1:
+            if constants.debug_warnings:
                 print("WARN: Rectangle coordinates specified in the wrong order or are the same")
             if x0 >= x1:
                 x0, x1 = x1, x0

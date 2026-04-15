@@ -36,6 +36,12 @@ if __name__ == "__main__":
     cbb_selection_mode.bind("<<ComboboxSelected>>", lambda event_: choose_selection_mode(event_, cbb_selection_mode.current()))
     cbb_selection_mode.current(0) # Set the default value as the first in the list
 
+    # Refresh button
+    sep_toolbar_separator = ttk.Separator(master=frm_toolbar, orient=tk.VERTICAL)
+    sep_toolbar_separator.grid(row=0, column=2, padx=(8, 7), pady=2, sticky="ns")
+    btn_refresh = tk.Button(master=frm_toolbar, text="Aktualizovat obrazovku")
+    btn_refresh.grid(row=0, column=3, pady=1)
+
     pnw_panes = ttk.Panedwindow(master=root, orient=tk.HORIZONTAL)
     pnw_panes.grid(sticky="nsew", row=1, column=0)
 
@@ -96,7 +102,7 @@ if __name__ == "__main__":
         # Populating it with objects
         for source in create_ray_star(300, 140, 90, 64):
             startup_Screen.ray_sources.append(source)
-        startup_Screen.ray_interactors.append(o := Glass_Rectangle(startup_Screen, 200, 200, 500, 350))
+        startup_Screen.ray_interactors.append(o := Glass_Rectangle(startup_Screen, 200, 200, 500, 220))
         #startup_Screen.tk_canvas.tag_bind(o.canvas_rectangle, "<Enter>", on_enter)
         del o
         #startup_Screen.ray_interactors.append(Glass_Rectangle(startup_Screen, 50, 50, 75, 75))
@@ -128,16 +134,52 @@ if __name__ == "__main__":
 
     for source in create_ray_star(115, 40, 18, 5):
         startup_Screen2.ray_sources.append(source)
-    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, -25, 50, 50, 500))
-    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, 175, 50, 200, 500))
-    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 50, 250, 175, 375))
+    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, -25, -50, 50, 500))
+    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, 175, -50, 200, 500))
+    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 50, 250, 175, 275))
     startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 450, 100, 475, 125))
     startup_Screen2.solve_all_sources()
     startup_Screen2.plot_all_interactors()
     
     root.after(150, startup_Screen.solve_all_sources)
     root.after(150, startup_Screen.plot_all_lines)
+    
+    def fast_refresh_screen():
+        startup_Screen.solve_all_sources()
+        startup_Screen.plot_all()
+        startup_Screen1.solve_all_sources()
+        startup_Screen1.plot_all()
+        startup_Screen2.solve_all_sources()
+        startup_Screen2.plot_all()
+        startup_Screen3.solve_all_sources()
+        startup_Screen3.plot_all()
 
+    def refresh_screen():
+        startup_Screen.solve_all_sources()
+        startup_Screen.plot_all_interactors()
+        startup_Screen.remove_all_lines()
+        root.after(50, startup_Screen.refresh_all_lines)
+        
+        startup_Screen1.solve_all_sources()
+        startup_Screen1.plot_all_interactors()
+        startup_Screen1.remove_all_lines()
+        root.after(50, startup_Screen1.refresh_all_lines)
+        
+        startup_Screen2.solve_all_sources()
+        startup_Screen2.plot_all_interactors()
+        startup_Screen2.remove_all_lines()
+        root.after(50, startup_Screen2.refresh_all_lines)
+        
+        startup_Screen3.solve_all_sources()
+        startup_Screen3.plot_all_interactors()
+        startup_Screen3.remove_all_lines()
+        root.after(50, startup_Screen3.refresh_all_lines)
+
+    root.after(250, fast_refresh_screen)
+    root.after(500, fast_refresh_screen)
+    
+    btn_refresh.configure(command=refresh_screen)
+    
     root.mainloop()
     if constants.debug_exiting:
         print(constants.exit_message)

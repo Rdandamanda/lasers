@@ -46,12 +46,13 @@ class Screen: # To allow this minimum skeleton to be used for type annotations. 
 class Interactor: # Generic parent class that doesn't hold any functionality in itself
     def __init__(self, editing_name: str ="Objekt", editing_type: str = "Objekt"):
         self.parent_screen: Screen
-        self.editing_name: str = editing_name
+        self._editing_name: str = editing_name
         self.editing_type: str = editing_type
+        self.editing_setup_info: list[dict]
     def __str__(self):
         return "Generic Interactor"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
-        return self.editing_name
+        return self._editing_name
     def get_editing_type(self) -> str: # The type name that should show up in the editing panel
         return self.editing_type
     def get_collision(self, segment: Segment) -> dict:
@@ -108,7 +109,7 @@ class Source:
                         break # Stop adding more segments
                 self.generated_segments[solving_index].specify_end(accepted_collision["x"], accepted_collision["y"])
                 if len(self.generated_segments) >= constants.max_segments: # If max_segments reached, stop going through more interactors
-                    if constants.debug_level:
+                    if constants.debug_warnings:
                             print(f"WARN: Max segments limit ({constants.max_segments}) reached when colliding with {interactor}")
                             #print("This segment: {vars(self)}, generated segments:")
                             #for s in self.generated_segments:
@@ -165,6 +166,12 @@ class Screen:
 
         for source in self.ray_sources:
             render_segments(self.tk_canvas, source.generated_segments)
+    def remove_all_lines(self) -> None:
+        for canvas_object in self.tk_canvas.find_withtag("line"):
+            self.tk_canvas.delete(canvas_object)
+    def refresh_all_lines(self) -> None:
+        for source in self.ray_sources:
+            render_segments(self.tk_canvas, source.generated_segments)
 
     def plot_all(self) -> None:
         self.plot_all_interactors()
@@ -191,7 +198,7 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
         screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
 def update_editing_panel(screen: Screen) -> None:
-    editing_item = constants.editing_item
+    editing_item: Interactor | Segment = constants.editing_item
     if editing_item == None:
         screen.lfr_editing.configure(text="Detaily objektu")
         screen.lbl_editing_type.configure(text="Typ objektu: (nevybráno)")
@@ -211,6 +218,19 @@ def update_editing_panel(screen: Screen) -> None:
     screen.lfr_editing.configure(text=f"Detaily objektu: {editing_name}")
     screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
     screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
+
+    for widget in constants.generated_widgets:
+        widget.destroy()
+
+    # Generate the editing panel for this item
+    lfr_editing = screen.lfr_editing
+    generated_widgets = []
+    for setup_dict in editing_item.editing_setup_info:
+        lbl_attribute_name = tk.Label(master=lfr_editing, text=setup_dict["attribute_label"])
+        lbl_attribute_name.grid(row=2, column=0)
+        generated_widgets.append(lbl_attribute_name)
+
+    constants.generated_widgets = generated_widgets
     
 def choose_selection_mode(event_, mode) -> None: # Is run whenever the ComboBox is used
     mode = ["SINGLE", "MULTI", "LINES"][mode] # This is the first time I've used, or, well, even seen this notation. Neat!
@@ -266,7 +286,7 @@ def render_segments(canvas: tk.Canvas, segments: list[Segment]) -> None: # Rende
     last_segment_index = len(segments) - 1
     for i_segment, segment in enumerate(segments):
         if segment.angle >= 360:
-            if constants.debug_level >= 1:
+            if constants.debug_warnings:
                 print(f"WARN: Segment's angle is high: {segment.angle}")
         if not segment.visible:
             continue

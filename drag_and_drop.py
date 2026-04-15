@@ -10,6 +10,7 @@ def _distance(x1, y1, x2, y2) -> float: # Distance between two points as per the
 def get_mouse_selected(event: Event, screen: Screen) -> list[int]:
     # Set variables based on selection mode
     selection_mode = constants.selection_mode
+    print(selection_mode)
     match selection_mode:
         case "SINGLE":
             offset = constants.single_select_offset
@@ -67,6 +68,7 @@ def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in 
         constants.selected_internal_objects = []
 
         selection_mode = constants.selection_mode
+        print(selection_mode)
         match selection_mode:
             case "SINGLE":
                 # Just one is selected anyway
