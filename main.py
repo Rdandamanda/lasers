@@ -132,12 +132,12 @@ if __name__ == "__main__":
     startup_Screen1.solve_all_sources()
     startup_Screen1.plot_all_interactors()
 
-    for source in create_ray_star(115, 40, 18, 5):
+    for source in create_ray_star(0, 150, 180, 5):
         startup_Screen2.ray_sources.append(source)
-    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, -25, -50, 50, 500))
-    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, 175, -50, 200, 500))
-    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 50, 250, 175, 275))
-    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 450, 100, 475, 125))
+    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, -50, 100, 500, 125))
+    startup_Screen2.ray_interactors.append(Glass_Rectangle(startup_Screen2, -50, 175, 500, 200))
+    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 475, 125, 500, 175))
+    startup_Screen2.ray_interactors.append(Obstacle_Rectangle(startup_Screen2, 450, 300, 475, 325))
     startup_Screen2.solve_all_sources()
     startup_Screen2.plot_all_interactors()
     

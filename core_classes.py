@@ -219,7 +219,7 @@ def update_editing_panel(screen: Screen) -> None:
     screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
     screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
 
-    for widget in constants.generated_widgets:
+    """for widget in constants.generated_widgets:
         widget.destroy()
 
     # Generate the editing panel for this item
@@ -230,7 +230,7 @@ def update_editing_panel(screen: Screen) -> None:
         lbl_attribute_name.grid(row=2, column=0)
         generated_widgets.append(lbl_attribute_name)
 
-    constants.generated_widgets = generated_widgets
+    constants.generated_widgets = generated_widgets"""
     
 def choose_selection_mode(event_, mode) -> None: # Is run whenever the ComboBox is used
     mode = ["SINGLE", "MULTI", "LINES"][mode] # This is the first time I've used, or, well, even seen this notation. Neat!
