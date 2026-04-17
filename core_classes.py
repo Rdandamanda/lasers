@@ -200,9 +200,13 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
 def update_editing_panel(screen: Screen) -> None:
     editing_item: Interactor | Segment = constants.editing_item
     if editing_item == None:
+        # Set all the texts to preset "unset" texts
         screen.lfr_editing.configure(text="Detaily objektu")
         screen.lbl_editing_type.configure(text="Typ objektu: (nevybráno)")
         screen.lbl_editing_name.configure(text="Jméno objektu: (nevybráno)")
+        # Remove the procedural part of the frame
+        for widget in constants.generated_widgets:
+            widget.destroy()
         return
     
     try:
@@ -219,7 +223,7 @@ def update_editing_panel(screen: Screen) -> None:
     screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
     screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
 
-    """for widget in constants.generated_widgets:
+    for widget in constants.generated_widgets:
         widget.destroy()
 
     # Generate the editing panel for this item
@@ -230,7 +234,7 @@ def update_editing_panel(screen: Screen) -> None:
         lbl_attribute_name.grid(row=2, column=0)
         generated_widgets.append(lbl_attribute_name)
 
-    constants.generated_widgets = generated_widgets"""
+    constants.generated_widgets = generated_widgets
     
 def choose_selection_mode(event_, mode) -> None: # Is run whenever the ComboBox is used
     mode = ["SINGLE", "MULTI", "LINES"][mode] # This is the first time I've used, or, well, even seen this notation. Neat!

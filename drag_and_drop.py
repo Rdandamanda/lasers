@@ -44,7 +44,7 @@ def get_mouse_selected(event: Event, screen: Screen) -> list[int]:
     
     match selection_mode:
         case "SINGLE":
-            return [overlapping[-1]] # This returns the topmost item (contained in a list)
+            return [answer[-1]] if len(answer) else [] # This returns the topmost item (contained in a list). Returns [] if answer is empty
         case "MULTI":
             return answer
         case "LINES":
