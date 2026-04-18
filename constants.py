@@ -44,4 +44,3 @@ selected_item_IDs = []
 selected_internal_objects = []
 selection_original_coords = (None, None)
 editing_item = None
-generated_widgets = []

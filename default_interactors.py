@@ -28,6 +28,8 @@ class Glass_Rectangle(Interactor):
         self._editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
         self.editing_setup_info: list[dict] = [{"attribute_label": "Jméno objektu", "setter": self.set_editing_name}]
+        self._editing_frame_generated: bool = False
+        self._editing_frame: None | tk.Frame = None
     def __str__(self):
         return f"Glass Rectangle ({self._editing_name})"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
@@ -60,6 +62,18 @@ class Glass_Rectangle(Interactor):
         self.x1 += x
         self.y0 += y
         self.y1 += y
+    def _generate_editing_frame(self) -> None:
+        self._editing_frame = tk.Frame(bg="yellow")
+        frm = self._editing_frame
+        lbl_test = tk.Label(master=frm, text="idk")
+        lbl_test.grid()
+
+        self._editing_frame_generated = True
+    def get_editing_frame(self) -> tk.Frame:
+        if not self._editing_frame_generated:
+            self._generate_editing_frame()
+        
+        return self._editing_frame
 
 
 class Obstacle_Rectangle(Interactor):

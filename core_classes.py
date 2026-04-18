@@ -49,6 +49,8 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
         self._editing_name: str = editing_name
         self.editing_type: str = editing_type
         self.editing_setup_info: list[dict]
+        self._editing_frame_generated: bool = False
+        self._editing_frame: tk.Frame
     def __str__(self):
         return "Generic Interactor"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
@@ -61,6 +63,14 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
         assert False, "Method of generic Interactor class not meant to be run"
     def move(self, x, y) -> None:
         assert False, "Method of generic Interactor class not meant to be run"
+    def _generate_editing_frame(self) -> None:
+        assert False, "Method of generic Interactor class not meant to be run"
+        self._editing_frame_generated = True
+    def get_editing_frame(self) -> tk.Frame:
+        if not self._editing_frame_generated:
+            self._generate_editing_frame()
+        
+        return self._editing_frame
 
 class Source:
     def __init__(self, x: int, y: int, angle: float) -> None:
@@ -204,9 +214,6 @@ def update_editing_panel(screen: Screen) -> None:
         screen.lfr_editing.configure(text="Detaily objektu")
         screen.lbl_editing_type.configure(text="Typ objektu: (nevybráno)")
         screen.lbl_editing_name.configure(text="Jméno objektu: (nevybráno)")
-        # Remove the procedural part of the frame
-        for widget in constants.generated_widgets:
-            widget.destroy()
         return
     
     try:
@@ -223,18 +230,10 @@ def update_editing_panel(screen: Screen) -> None:
     screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
     screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
 
-    for widget in constants.generated_widgets:
-        widget.destroy()
-
-    # Generate the editing panel for this item
+    # Plot the editing panel for this item
     lfr_editing = screen.lfr_editing
-    generated_widgets = []
-    for setup_dict in editing_item.editing_setup_info:
-        lbl_attribute_name = tk.Label(master=lfr_editing, text=setup_dict["attribute_label"])
-        lbl_attribute_name.grid(row=2, column=0)
-        generated_widgets.append(lbl_attribute_name)
-
-    constants.generated_widgets = generated_widgets
+    frm_generated = editing_item.get_editing_frame() # This will have it generated or receive the already generated one
+    frm_generated.grid()
     
 def choose_selection_mode(event_, mode) -> None: # Is run whenever the ComboBox is used
     mode = ["SINGLE", "MULTI", "LINES"][mode] # This is the first time I've used, or, well, even seen this notation. Neat!
