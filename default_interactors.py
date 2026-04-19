@@ -63,6 +63,12 @@ class Glass_Rectangle(Interactor):
         self.y1 += y
         if self._editing_frame_generated:
             self.lbl_coordinates.configure(text=f"Souřadnice: X:{self.x1} Y:{-self.y1}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner)
+    def delete(self) -> None:
+        self.parent_screen.ray_interactors.remove(self)
+        self.parent_screen.tk_canvas.delete(self.canvas_rectangle)
+        self.parent_screen.solve_all_sources()
+        self.parent_screen.plot_all()
+        # I'm pretty sure it's still referenced somewhere. Is this a memory leak?
     def edit_size(self, _a, _b, _c) -> None: # Those three arguments supplied by the tk.StringVar trace
         if constants.debug_editing:
             print("Attempting edit...")
@@ -114,6 +120,10 @@ class Glass_Rectangle(Interactor):
 
         self.lbl_pixels = tk.Label(master=frm, text="(Vše udáváno v pixelech)")
         self.lbl_pixels.grid(row=3, column=0, columnspan=2, pady=7)
+
+        # Deletion button
+        self.btn_deletion = tk.Button(master=frm, text="   Smazat objekt   ", command=self.delete)
+        self.btn_deletion.grid(row=4, column=0, columnspan=2)
 
         self._editing_frame_generated = True
     def get_editing_frame(self) -> tk.Frame:
@@ -181,6 +191,12 @@ class Obstacle_Rectangle(Interactor):
         self.y1 += y
         if self._editing_frame_generated:
             self.lbl_coordinates.configure(text=f"Souřadnice: X:{self.x1} Y:{-self.y1}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner)
+    def delete(self) -> None:
+        self.parent_screen.ray_interactors.remove(self)
+        self.parent_screen.tk_canvas.delete(self.canvas_rectangle)
+        self.parent_screen.solve_all_sources()
+        self.parent_screen.plot_all()
+        # I'm pretty sure it's still referenced somewhere. Is this a memory leak?
     def edit_size(self, _a, _b, _c) -> None: # Those three arguments supplied by the tk.StringVar trace
         if constants.debug_editing:
             print("Attempting edit...")
@@ -232,6 +248,10 @@ class Obstacle_Rectangle(Interactor):
 
         self.lbl_pixels = tk.Label(master=frm, text="(Vše udáváno v pixelech)")
         self.lbl_pixels.grid(row=3, column=0, columnspan=2, pady=7)
+
+        # Deletion button
+        self.btn_deletion = tk.Button(master=frm, text="   Smazat objekt   ", command=self.delete)
+        self.btn_deletion.grid(row=4, column=0, columnspan=2)
 
         self._editing_frame_generated = True
     def get_editing_frame(self) -> tk.Frame:

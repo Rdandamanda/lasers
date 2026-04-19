@@ -12,7 +12,7 @@ debug_any: bool = True # Master option. If False, turns off all debugging (excep
 debug_warnings: bool = True # Warnings in the console of type "WARN: "
 debug_background_colors: bool = False # Gives vibrant colours to frames that shouldn't have visible backgrounds
 debug_selection: bool = False # Prints currently selected and currently edited item(s) into the console any time anything is selected
-debug_editing: bool = True
+debug_editing: bool = False
 debug_exiting: bool = True # Whether to print the exit message upon successfully exiting the program
 exit_message = "Úspěšně ukončeno"
 
