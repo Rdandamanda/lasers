@@ -8,7 +8,29 @@ do_os_check()
 
 def create_item(notebook: ttk.Notebook, item_type: str, item_shape: str) -> None:
     screen = get_selected_screen(notebook=notebook)
-    screen.ray_interactors.append(Obstacle_Rectangle(startup_Screen1, 200, 200, 350, 500))
+    x0 = 200
+    y0 = 200
+
+    match item_shape:
+        case "Tenký vodorovný":
+            x1 = x0 + 200
+            y1 = x0 + 15
+        case "Tenký svislý":
+            x1 = x0 + 15
+            y1 = y0 + 200
+        case "Čtvercový":
+            x1 = x0 + 100
+            y1 = y0 + 100
+        case _:
+            raise Exception("Item shape does not match expected cases")
+
+    match item_type:
+        case "Zrcadlo":
+            screen.ray_interactors.append(Glass_Rectangle(screen, x0, y0, x1, y1))
+        case "Překážka":
+            screen.ray_interactors.append(Obstacle_Rectangle(screen, x0, y0, x1, y1))
+        case _:
+            raise Exception("Item type does not match expected cases")
     screen.solve_all_sources()
     screen.plot_all()
 
