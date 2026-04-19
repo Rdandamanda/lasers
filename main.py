@@ -9,7 +9,6 @@ do_os_check()
 def create_item(notebook: ttk.Notebook, item_type: str, item_shape: str) -> None:
     screen = get_selected_screen(notebook=notebook)
     screen.ray_interactors.append(Obstacle_Rectangle(startup_Screen1, 200, 200, 350, 500))
-    print(screen.ray_interactors)
     screen.solve_all_sources()
     screen.plot_all()
 
