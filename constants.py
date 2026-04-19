@@ -45,5 +45,8 @@ selection_mode = "SINGLE" # "SINGLE": drags and edits one interactor, "MULTI": d
 selected_item_IDs = []
 selected_internal_objects = []
 selection_original_coords = (None, None)
+# Item editing
 editing_item = None
 last_editing_frame = None
+# Item adding
+UUID_to_Screen_dict: dict = {}

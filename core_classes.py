@@ -316,10 +316,17 @@ def render_segments(canvas: tk.Canvas, segments: list[Segment]) -> None: # Rende
             next_segment = segments[i_segment + 1]
             render_nonterminal_line(canvas, segment, next_segment)
 
-def add_screen(notebook: ttk.Notebook, neccessary_references: dict, name: str ="Nová plocha", color: str ="white") -> None:
+def create_screen(notebook: ttk.Notebook, neccessary_references: dict, name: str ="Nová plocha", color: None | str =None) -> Screen:
     new_screen = Screen(neccessary_references=neccessary_references)
-    new_screen.tk_canvas.configure(bg=color)
     notebook.add(new_screen.tk_frame, text=name)
+    
+    # If color is set, set the background colour, if color is None, let Tkinter use the default canvas colour
+    if color != None:
+        new_screen.tk_canvas.configure(bg=color)
+
+    constants.UUID_to_Screen_dict[id(new_screen)] = new_screen # Key: the UUID of the new screen; Value: a reference to the new screen
+
+    return new_screen
 
 def run_screen_adding(notebook: ttk.Notebook, neccessary_references: dict) -> None:
     tlv_adding = tk.Toplevel()
@@ -338,7 +345,7 @@ def run_screen_adding(notebook: ttk.Notebook, neccessary_references: dict) -> No
     ent_color = tk.Entry(master=tlv_adding, textvariable=var_color)
     ent_color.grid(row=1, column=1, pady=3)
 
-    btn_add = tk.Button(master=tlv_adding, text="Přidat", command=lambda: add_screen(notebook=notebook, neccessary_references=neccessary_references, name=var_name.get(), color=var_color.get())) # Trickles through the neccessary references
+    btn_add = tk.Button(master=tlv_adding, text="Přidat", command=lambda: create_screen(notebook=notebook, neccessary_references=neccessary_references, name=var_name.get(), color=var_color.get())) # Trickles through the neccessary references
     btn_add.grid(row=2, column=0, columnspan=2)
 
 def delete_screen(notebook: ttk.Notebook, id: int, combobox: ttk.Combobox) -> None:

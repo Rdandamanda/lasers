@@ -104,8 +104,7 @@ if __name__ == "__main__":
     # The debug screen
     if load_debug_screen == True:
         # Tab setup
-        startup_Screen = Screen(neccessary_references=screen_dict)
-        ntb_Screens.add(startup_Screen.tk_frame, text="Demo - zrcadlo")
+        startup_Screen = create_screen(notebook=ntb_Screens, neccessary_references=screen_dict, name="Demo - zrcadlo")
 
         # Bind for getting mouse position
         #bind_ray_star_to(startup_Screen.tk_canvas, startup_Screen)
@@ -121,15 +120,9 @@ if __name__ == "__main__":
 
     # Stuff for showing off the tabs. New screens, differentiated by colour. Happy with the high ease of adding them
     if load_extra_debug_screens == True:
-        startup_Screen1 = Screen(neccessary_references=screen_dict)
-        startup_Screen1.tk_canvas.configure(bg="#BBBBBB")
-        ntb_Screens.add(startup_Screen1.tk_frame, text="Demo - překážka")
-        startup_Screen2 = Screen(neccessary_references=screen_dict)
-        startup_Screen2.tk_canvas.configure(bg="#BFBFBF")
-        ntb_Screens.add(startup_Screen2.tk_frame, text="Demo - obojí")
-        startup_Screen3 = Screen(neccessary_references=screen_dict)
-        startup_Screen3.tk_canvas.configure(bg="#E0E0E0")
-        ntb_Screens.add(startup_Screen3.tk_frame, text="Volná plocha")
+        startup_Screen1 = create_screen(notebook=ntb_Screens, neccessary_references=screen_dict, name="Demo - překážka", color="#BBBBBB")
+        startup_Screen2 = create_screen(notebook=ntb_Screens, neccessary_references=screen_dict, name="Demo - obojí", color="#BFBFBF")
+        startup_Screen3 = create_screen(notebook=ntb_Screens, neccessary_references=screen_dict, name="Volná plocha", color="#E0E0E0")
         startup_Screen3.solve_all_sources()
         startup_Screen3.plot_all()
 
