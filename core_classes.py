@@ -1,6 +1,7 @@
 import constants
 
 import tkinter as tk
+from tkinter import ttk # Just for one type annotation and a Combobox
 from math import tan, radians
 
 def do_os_check() -> None: # Vytvořit z toho funkci mi poradil Ondra, je to aby os byl lokální symbol, definovaný jenom pro tuhle funkci a ne pro celý program
@@ -314,3 +315,83 @@ def render_segments(canvas: tk.Canvas, segments: list[Segment]) -> None: # Rende
             # Non-terminal line
             next_segment = segments[i_segment + 1]
             render_nonterminal_line(canvas, segment, next_segment)
+
+def add_screen(notebook: ttk.Notebook, neccessary_references: dict, name: str ="Nová plocha", color: str ="white") -> None:
+    new_screen = Screen(neccessary_references=neccessary_references)
+    new_screen.tk_canvas.configure(bg=color)
+    notebook.add(new_screen.tk_frame, text=name)
+
+def run_screen_adding(notebook: ttk.Notebook, neccessary_references: dict) -> None:
+    tlv_adding = tk.Toplevel()
+    tlv_adding.title("Přidávání plochy")
+    tlv_adding.configure(padx=50, pady=30)
+
+    lbl_name = tk.Label(master=tlv_adding, text="Název plochy:")
+    lbl_name.grid(row=0, column=0)
+    var_name = tk.StringVar(master=tlv_adding, value="Vytvořená plocha")
+    ent_name = tk.Entry(master=tlv_adding, textvariable=var_name)
+    ent_name.grid(row=0, column=1)
+
+    lbl_color = tk.Label(master=tlv_adding, text="Barva plochy:")
+    lbl_color.grid(row=1, column=0)
+    var_color = tk.StringVar(master=tlv_adding, value="white")
+    ent_color = tk.Entry(master=tlv_adding, textvariable=var_color)
+    ent_color.grid(row=1, column=1, pady=3)
+
+    btn_add = tk.Button(master=tlv_adding, text="Přidat", command=lambda: add_screen(notebook=notebook, neccessary_references=neccessary_references, name=var_name.get(), color=var_color.get())) # Trickles through the neccessary references
+    btn_add.grid(row=2, column=0, columnspan=2)
+
+def delete_screen(notebook: ttk.Notebook, id: int, combobox: ttk.Combobox) -> None:
+    # Protect against empty selection
+    if id == -1:
+        if constants.debug_warnings:
+            print("WARN: Tried to remove ttk.Notebook tab with id -1, doing nothing and returning, probably the combobox content is empty or is not a name of a known notebook tab")
+        return
+
+    # Delete the tab
+    notebook.forget(id)
+
+    # Re-get the notebook's tab names
+    all_tab_names = []
+    for tab in notebook.tabs():
+        all_tab_names.append(notebook.tab(tab, option="text"))
+
+    # Re-configure the combobox values
+    combobox.configure(values=all_tab_names)
+    if all_tab_names == []:
+        combobox.set("") # If there are no tabs left, set the contents blank
+    else:
+        combobox.current(0)
+
+def run_screen_deletion(notebook: ttk.Notebook) -> None:
+    # Window setup
+    tlv_deletion = tk.Toplevel()
+    tlv_deletion.title("Odstraňování plochy")
+    tlv_deletion.configure(padx=50, pady=30)
+
+    # Get the notebook's tab names
+    all_tab_names = []
+    for tab in notebook.tabs():
+        all_tab_names.append(notebook.tab(tab, option="text"))
+
+    # GUI setup
+    lbl_name = tk.Label(master=tlv_deletion, text="Název plochy:")
+    lbl_name.grid(row=0, column=0)
+
+    cbb_tabs = ttk.Combobox(master=tlv_deletion, values=all_tab_names, state="readonly")
+    if not all_tab_names == []:
+        cbb_tabs.current(0)
+    cbb_tabs.grid(row=0, column=1)
+
+    btn_delete = tk.Button(master=tlv_deletion, text="     Smazat plochu     ", command=lambda: delete_screen(notebook, cbb_tabs.current(), cbb_tabs)) # Yes, I'm adding space like that
+    btn_delete.grid(row=1, column=0, columnspan=2, pady=10)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    lbl_info = tk.Label(text="For testing the layout of the two Toplevel windows")
+    lbl_info.pack(padx=100, pady=70)
+    run_screen_adding(notebook=ttk.Notebook(), neccessary_references={})
+    run_screen_deletion(notebook=ttk.Notebook())
+    #root.after(100, lambda: print(root.geometry())) # For getting the ideal size values
+    root.geometry(f"473x161+{int(1920/2 - 473/2)}+{int(1080/2 - 161/2 - 50)}") # This should centre it!
+    root.mainloop()

@@ -16,9 +16,14 @@ if __name__ == "__main__":
     
     font_of_choice_available: bool = do_font_check() # Tohle potřebuje být až tady, protože to potřebuje, aby existovala instance Tk()
 
-    # Menu bar (upper, thin)
-    menubar = tk.Menu(root)
+    # Menu bar (upper, thin) setup
+    menubar = tk.Menu(master=root)
     root.configure(menu=menubar)
+
+    mnu_plochy = tk.Menu(master=menubar)
+    menubar.add_cascade(label="Plochy", menu=mnu_plochy)
+    # The screen adding and deletion commands are set later, they require a bunch of widgets exist
+
     menubar.add_command(label="Zavřít", command=root.quit)
 
     # Tool bar (lower, with custom buttons)
@@ -89,10 +94,16 @@ if __name__ == "__main__":
     grp_grip_right = ttk.Sizegrip(master=frm_editing)
     grp_grip_right.grid(column=0, row=1, sticky="se")
 
+    # Contains references to the neccessary widgets for Screen creation
+    screen_dict: dict = {"lbl_debug": lbl_debug, "lfr_editing": lfr_editing, "lbl_editing_type": lbl_editing_type, "lbl_editing_name": lbl_editing_name}
+
+    # The window is now ready for adding Screens
+    mnu_plochy.add_command(label="Přidat plochu", command=lambda: run_screen_adding(notebook=ntb_Screens, neccessary_references=screen_dict)) # This lambda function can now be configured properly, that's why this is all the way here
+    mnu_plochy.add_command(label="Odstranit plochu", command=lambda: run_screen_deletion(notebook=ntb_Screens))
+
     # The debug screen
     if load_debug_screen == True:
         # Tab setup
-        screen_dict: dict = {"lbl_debug": lbl_debug, "lfr_editing": lfr_editing, "lbl_editing_type": lbl_editing_type, "lbl_editing_name": lbl_editing_name}
         startup_Screen = Screen(neccessary_references=screen_dict)
         ntb_Screens.add(startup_Screen.tk_frame, text="Demo - zrcadlo")
 
