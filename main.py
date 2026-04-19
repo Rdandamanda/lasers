@@ -6,6 +6,13 @@ from default_sources import *
 from tkinter import ttk
 do_os_check()
 
+def create_item(notebook: ttk.Notebook, item_type: str, item_shape: str) -> None:
+    screen = get_selected_screen(notebook=notebook)
+    screen.ray_interactors.append(Obstacle_Rectangle(startup_Screen1, 200, 200, 350, 500))
+    print(screen.ray_interactors)
+    screen.solve_all_sources()
+    screen.plot_all()
+
 if __name__ == "__main__":
     # GUI setup
     root = tk.Tk()
@@ -42,11 +49,35 @@ if __name__ == "__main__":
     cbb_selection_mode.current(0) # Set the default value as the first in the list
 
     # Refresh button
-    sep_toolbar_separator = ttk.Separator(master=frm_toolbar, orient=tk.VERTICAL)
-    sep_toolbar_separator.grid(row=0, column=2, padx=(8, 7), pady=2, sticky="ns")
+    sep_toolbar_separator_1 = ttk.Separator(master=frm_toolbar, orient=tk.VERTICAL)
+    sep_toolbar_separator_1.grid(row=0, column=2, padx=(8, 7), pady=2, sticky="ns")
     btn_refresh = tk.Button(master=frm_toolbar, text="Aktualizovat obrazovku")
     btn_refresh.grid(row=0, column=3, pady=1)
 
+    # Item adding section
+    sep_toolbar_separator_2 = ttk.Separator(master=frm_toolbar, orient=tk.VERTICAL)
+    sep_toolbar_separator_2.grid(row=0, column=4, padx=(7, 3), pady=2, sticky="ns")
+
+    lbl_item_type = tk.Label(master=frm_toolbar, text="Přidávání objektu:")
+    lbl_item_type.grid(row=0, column=5)
+    var_item_type = tk.StringVar()
+    cbb_item_type = ttk.Combobox(master=frm_toolbar, values=["Zrcadlo", "Překážka"], state="readonly", textvariable=var_item_type)
+    cbb_item_type.grid(row=0, column=6, padx=(3, 0), pady=3)
+    #cbb_item_type.bind("<<ComboboxSelected>>", lambda event_: choose_selection_mode(event_, cbb_selection_mode.current()))
+    cbb_item_type.current(0) # Set the default value as the first in the list
+
+    lbl_item_shape = tk.Label(master=frm_toolbar, text="; Tvar objektu:")
+    lbl_item_shape.grid(row=0, column=7)
+    var_item_shape = tk.StringVar()
+    cbb_item_shape = ttk.Combobox(master=frm_toolbar, values=["Tenký vodorovný", "Tenký svislý", "Čtvercový"], state="readonly", textvariable=var_item_shape)
+    cbb_item_shape.grid(row=0, column=8, padx=(3, 0), pady=3)
+    #cbb_item_type.bind("<<ComboboxSelected>>", lambda event_: choose_selection_mode(event_, cbb_selection_mode.current()))
+    cbb_item_shape.current(0) # Set the default value as the first in the list
+
+    btn_add_object = tk.Button(master=frm_toolbar, text="Přidat objekt") # The command will be configured later, it needs the Notebook widget to exist
+    btn_add_object.grid(row=0, column=9, padx=7, pady=1)
+
+    # Panedwindow setup
     pnw_panes = ttk.Panedwindow(master=root, orient=tk.HORIZONTAL)
     pnw_panes.grid(sticky="nsew", row=1, column=0)
 
@@ -64,6 +95,7 @@ if __name__ == "__main__":
 
     ntb_Screens = ttk.Notebook(master=frm_screens)
     ntb_Screens.grid(columnspan=2, sticky="nsew")
+    btn_add_object.configure(command=lambda: create_item(notebook=ntb_Screens, item_type=var_item_type.get(), item_shape=var_item_shape.get())) # The command can now be set, it requires a reference to the Notebook widget as an argument
 
     lbl_debug = tk.Label(master=frm_screens)
     if font_of_choice_available:

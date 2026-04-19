@@ -49,4 +49,4 @@ selection_original_coords = (None, None)
 editing_item = None
 last_editing_frame = None
 # Item adding
-UUID_to_Screen_dict: dict = {}
+frame_UUID_to_Screen_dict: dict = {}

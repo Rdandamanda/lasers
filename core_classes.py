@@ -324,7 +324,7 @@ def create_screen(notebook: ttk.Notebook, neccessary_references: dict, name: str
     if color != None:
         new_screen.tk_canvas.configure(bg=color)
 
-    constants.UUID_to_Screen_dict[id(new_screen)] = new_screen # Key: the UUID of the new screen; Value: a reference to the new screen
+    constants.frame_UUID_to_Screen_dict[id(new_screen.tk_frame)] = new_screen # Key: the UUID of the Tkinter frame of the new screen; Value: a reference to the new screen
 
     return new_screen
 
@@ -392,6 +392,10 @@ def run_screen_deletion(notebook: ttk.Notebook) -> None:
 
     btn_delete = tk.Button(master=tlv_deletion, text="     Smazat plochu     ", command=lambda: delete_screen(notebook, cbb_tabs.current(), cbb_tabs)) # Yes, I'm adding space like that
     btn_delete.grid(row=1, column=0, columnspan=2, pady=10)
+
+def get_selected_screen(notebook: ttk.Notebook) -> Screen:
+    frm = notebook.nametowidget(notebook.select())
+    return constants.frame_UUID_to_Screen_dict[id(frm)]
 
 if __name__ == "__main__": # For testing the layout of the two Toplevel windows
     root = tk.Tk()
