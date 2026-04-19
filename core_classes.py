@@ -386,7 +386,7 @@ def run_screen_deletion(notebook: ttk.Notebook) -> None:
     btn_delete = tk.Button(master=tlv_deletion, text="     Smazat plochu     ", command=lambda: delete_screen(notebook, cbb_tabs.current(), cbb_tabs)) # Yes, I'm adding space like that
     btn_delete.grid(row=1, column=0, columnspan=2, pady=10)
 
-if __name__ == "__main__":
+if __name__ == "__main__": # For testing the layout of the two Toplevel windows
     root = tk.Tk()
     lbl_info = tk.Label(text="For testing the layout of the two Toplevel windows")
     lbl_info.pack(padx=100, pady=70)

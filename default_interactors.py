@@ -69,6 +69,10 @@ class Glass_Rectangle(Interactor):
         self.parent_screen.solve_all_sources()
         self.parent_screen.plot_all()
         # I'm pretty sure it's still referenced somewhere. Is this a memory leak?
+
+        # Clears the editing panel because deletion takes place juts from the editing panel as of now. However, this is not defined as always the case
+        constants.editing_item = None
+        update_editing_panel(self.parent_screen)
     def edit_size(self, _a, _b, _c) -> None: # Those three arguments supplied by the tk.StringVar trace
         if constants.debug_editing:
             print("Attempting edit...")
@@ -197,6 +201,10 @@ class Obstacle_Rectangle(Interactor):
         self.parent_screen.solve_all_sources()
         self.parent_screen.plot_all()
         # I'm pretty sure it's still referenced somewhere. Is this a memory leak?
+
+        # Clears the editing panel because deletion takes place juts from the editing panel as of now. However, this is not defined as always the case
+        constants.editing_item = None
+        update_editing_panel(self.parent_screen)
     def edit_size(self, _a, _b, _c) -> None: # Those three arguments supplied by the tk.StringVar trace
         if constants.debug_editing:
             print("Attempting edit...")
