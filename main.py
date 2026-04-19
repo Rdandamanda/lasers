@@ -48,6 +48,10 @@ if __name__ == "__main__":
     menubar = tk.Menu(master=root)
     root.configure(menu=menubar)
 
+    mnu_soubor = tk.Menu(master=menubar)
+    menubar.add_cascade(label="Soubor", menu=mnu_soubor)
+    # The screen saving and loading commands are set later, they require a Notebook widget exist
+
     mnu_plochy = tk.Menu(master=menubar)
     menubar.add_cascade(label="Plochy", menu=mnu_plochy)
     # The screen adding and deletion commands are set later, they require a bunch of widgets exist
@@ -150,7 +154,9 @@ if __name__ == "__main__":
     # Contains references to the neccessary widgets for Screen creation
     screen_dict: dict = {"lbl_debug": lbl_debug, "lfr_editing": lfr_editing, "lbl_editing_type": lbl_editing_type, "lbl_editing_name": lbl_editing_name}
 
-    # The window is now ready for adding Screens
+    # The window is now ready for getting and adding Screens
+    mnu_soubor.add_command(label="Uložit", command=lambda: save_current_screen(notebook=ntb_Screens))
+    mnu_soubor.add_command(label="Načíst", command=lambda: load_a_screen(notebook=ntb_Screens))
     mnu_plochy.add_command(label="Přidat plochu", command=lambda: run_screen_adding(notebook=ntb_Screens, neccessary_references=screen_dict)) # This lambda function can now be configured properly, that's why this is all the way here
     mnu_plochy.add_command(label="Odstranit plochu", command=lambda: run_screen_deletion(notebook=ntb_Screens))
 

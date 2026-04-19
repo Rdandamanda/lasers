@@ -2,6 +2,7 @@ import constants
 
 import tkinter as tk
 from tkinter import ttk # Just for one type annotation and a Combobox
+from tkinter.filedialog import askopenfile, asksaveasfile
 from math import tan, radians
 
 def do_os_check() -> None: # Vytvořit z toho funkci mi poradil Ondra, je to aby os byl lokální symbol, definovaný jenom pro tuhle funkci a ne pro celý program
@@ -396,6 +397,25 @@ def run_screen_deletion(notebook: ttk.Notebook) -> None:
 def get_selected_screen(notebook: ttk.Notebook) -> Screen:
     frm = notebook.nametowidget(notebook.select())
     return constants.frame_UUID_to_Screen_dict[id(frm)]
+
+def save_current_screen(notebook: ttk.Notebook) -> None:
+    scrn = get_selected_screen(notebook=notebook)
+    file = asksaveasfile()
+    if file == None:
+        return
+    
+    with file:
+        print(repr(scrn), file=file)
+
+def load_a_screen(notebook: ttk.Notebook) -> None:
+    scrn = get_selected_screen(notebook=notebook)
+    file = askopenfile()
+    if file == None:
+        return
+    
+    with file:
+        print(f"Reading file {file}:")
+        print(file.read())
 
 if __name__ == "__main__": # For testing the layout of the two Toplevel windows
     root = tk.Tk()
