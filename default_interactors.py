@@ -27,7 +27,6 @@ class Glass_Rectangle(Interactor):
         # attributes specific to the editing panel
         self._editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
-        self.editing_setup_info: list[dict] = [{"attribute_label": "Jméno objektu", "setter": self.set_editing_name}]
         self._editing_frame_generated: bool = False
         self._editing_frame: None | tk.Frame = None
     def __str__(self):
@@ -62,11 +61,59 @@ class Glass_Rectangle(Interactor):
         self.x1 += x
         self.y0 += y
         self.y1 += y
+        if self._editing_frame_generated:
+            self.lbl_coordinates.configure(text=f"Souřadnice: X:{self.x1} Y:{-self.y1}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner)
+    def edit_size(self, _a, _b, _c) -> None: # Those three arguments supplied by the tk.StringVar trace
+        if constants.debug_editing:
+            print("Attempting edit...")
+
+        # Sanitise input
+        try:
+            new_width = int(self.var_width.get())
+            new_height = int(self.var_height.get())
+        except:
+            return
+        if new_width < 1 or new_height < 1:
+            return
+        
+        # Set own width and height
+        self.x1 = self.x0 + new_width
+        self.y1 = self.y0 + new_height
+
+        # Run the updates
+        self.parent_screen.solve_all_sources()
+        self.parent_screen.plot_all()
+        if constants.debug_editing:
+            print(f"Worked, newly: {self.var_width.get()}, {self.var_height.get(), 1}")
     def _generate_editing_frame(self) -> None:
-        self._editing_frame = tk.Frame(bg="yellow")
-        frm = self._editing_frame
-        lbl_test = tk.Label(master=frm, text="idk")
-        lbl_test.grid()
+        self._editing_frame = tk.Frame(master=self.parent_screen.lfr_editing)
+        frm = self._editing_frame # Shorthand
+        if constants.debug_background_colors:
+            frm.configure(background="green")
+
+        # Coordinates label
+        self.lbl_coordinates = tk.Label(master=frm, text=f"Souřadnice: X:{self.x1} Y:{-self.y1}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner
+        self.lbl_coordinates.grid(row=0, column=0, columnspan=2)
+
+        # Size entry
+        self.lbl_width = tk.Label(master=frm, text="Šířka: ")
+        self.lbl_width.grid(row=1, column=0, sticky="e")
+        self.var_width = tk.StringVar()
+        self.var_width.set(self.x1 - self.x0) # Display current width
+        self.var_width.trace("w", self.edit_size) # Takes care of all three types of setting
+        self.spb_width = tk.Spinbox(master=frm, textvariable=self.var_width, from_=1, to=100000)
+        self.spb_width.grid(row=1, column=1)
+        
+        self.lbl_height = tk.Label(master=frm, text="Výška: ")
+        self.lbl_height.grid(row=2, column=0, sticky="e")
+        self.var_height = tk.StringVar()
+        self.var_height.set(self.y1 - self.y0) # Display current height
+        self.var_height.trace("w", self.edit_size) # Takes care of all three types of setting
+        self.spb_height = tk.Spinbox(master=frm, textvariable=self.var_height, from_=1, to=100000)
+        self.spb_height.grid(row=2, column=1)
+
+        self.lbl_pixels = tk.Label(master=frm, text="(Vše udáváno v pixelech)")
+        self.lbl_pixels.grid(row=3, column=0, columnspan=2, pady=7)
 
         self._editing_frame_generated = True
     def get_editing_frame(self) -> tk.Frame:
@@ -74,7 +121,6 @@ class Glass_Rectangle(Interactor):
             self._generate_editing_frame()
         
         return self._editing_frame
-
 
 class Obstacle_Rectangle(Interactor):
     def __init__(self, parent_screen, x0, y0, x1, y1, editing_name: str ="Překážka", editing_type: str = "Překážka"):
@@ -100,6 +146,8 @@ class Obstacle_Rectangle(Interactor):
         # attributes specific to the editing panel
         self.editing_name: str = f"{editing_name} #{randint(1111, 9999)}"
         self.editing_type: str = editing_type
+        self._editing_frame_generated: bool = False
+        self._editing_frame: None | tk.Frame = None
     def __str__(self):
         return f"Obstacle Rectangle ({self.editing_name})"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
@@ -131,3 +179,63 @@ class Obstacle_Rectangle(Interactor):
         self.x1 += x
         self.y0 += y
         self.y1 += y
+        if self._editing_frame_generated:
+            self.lbl_coordinates.configure(text=f"Souřadnice: X:{self.x1} Y:{-self.y1}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner)
+    def edit_size(self, _a, _b, _c) -> None: # Those three arguments supplied by the tk.StringVar trace
+        if constants.debug_editing:
+            print("Attempting edit...")
+
+        # Sanitise input
+        try:
+            new_width = int(self.var_width.get())
+            new_height = int(self.var_height.get())
+        except:
+            return
+        if new_width < 1 or new_height < 1:
+            return
+        
+        # Set own width and height
+        self.x1 = self.x0 + new_width
+        self.y1 = self.y0 + new_height
+
+        # Run the updates
+        self.parent_screen.solve_all_sources()
+        self.parent_screen.plot_all()
+        if constants.debug_editing:
+            print(f"Worked, newly: {self.var_width.get()}, {self.var_height.get(), 1}")
+    def _generate_editing_frame(self) -> None:
+        self._editing_frame = tk.Frame(master=self.parent_screen.lfr_editing)
+        frm = self._editing_frame # Shorthand
+        if constants.debug_background_colors:
+            frm.configure(background="green")
+
+        # Coordinates label
+        self.lbl_coordinates = tk.Label(master=frm, text=f"Souřadnice: X:{self.x1} Y:{-self.y1}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner
+        self.lbl_coordinates.grid(row=0, column=0, columnspan=2)
+
+        # Size entry
+        self.lbl_width = tk.Label(master=frm, text="Šířka: ")
+        self.lbl_width.grid(row=1, column=0, sticky="e")
+        self.var_width = tk.StringVar()
+        self.var_width.set(self.x1 - self.x0) # Display current width
+        self.var_width.trace("w", self.edit_size) # Takes care of all three types of setting
+        self.spb_width = tk.Spinbox(master=frm, textvariable=self.var_width, from_=1, to=100000)
+        self.spb_width.grid(row=1, column=1)
+        
+        self.lbl_height = tk.Label(master=frm, text="Výška: ")
+        self.lbl_height.grid(row=2, column=0, sticky="e")
+        self.var_height = tk.StringVar()
+        self.var_height.set(self.y1 - self.y0) # Display current height
+        self.var_height.trace("w", self.edit_size) # Takes care of all three types of setting
+        self.spb_height = tk.Spinbox(master=frm, textvariable=self.var_height, from_=1, to=100000)
+        self.spb_height.grid(row=2, column=1)
+
+        self.lbl_pixels = tk.Label(master=frm, text="(Vše udáváno v pixelech)")
+        self.lbl_pixels.grid(row=3, column=0, columnspan=2, pady=7)
+
+        self._editing_frame_generated = True
+    def get_editing_frame(self) -> tk.Frame:
+        if not self._editing_frame_generated:
+            self._generate_editing_frame()
+        
+        return self._editing_frame

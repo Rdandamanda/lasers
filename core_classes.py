@@ -50,7 +50,7 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
         self.editing_type: str = editing_type
         self.editing_setup_info: list[dict]
         self._editing_frame_generated: bool = False
-        self._editing_frame: tk.Frame
+        self._editing_frame: None | tk.Frame = None
     def __str__(self):
         return "Generic Interactor"
     def get_editing_name(self) -> str: # The name that should show up in the editing panel
@@ -65,8 +65,10 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
         assert False, "Method of generic Interactor class not meant to be run"
     def _generate_editing_frame(self) -> None:
         assert False, "Method of generic Interactor class not meant to be run"
+        self._editing_frame = tk.Frame(master=self.parent_screen.lfr_editing)
         self._editing_frame_generated = True
     def get_editing_frame(self) -> tk.Frame:
+        assert False, "Method of generic Interactor class not meant to be run"
         if not self._editing_frame_generated:
             self._generate_editing_frame()
         
@@ -209,11 +211,16 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
 
 def update_editing_panel(screen: Screen) -> None:
     editing_item: Interactor | Segment = constants.editing_item
+    lfr_editing = screen.lfr_editing
     if editing_item == None:
         # Set all the texts to preset "unset" texts
-        screen.lfr_editing.configure(text="Detaily objektu")
+        lfr_editing.configure(text="Detaily objektu")
         screen.lbl_editing_type.configure(text="Typ objektu: (nevybráno)")
         screen.lbl_editing_name.configure(text="Jméno objektu: (nevybráno)")
+        # Let's hope this works
+        if not constants.last_editing_frame == None:
+            constants.last_editing_frame.grid_forget()
+        constants.last_editing_frame = None
         return
     
     try:
@@ -226,14 +233,17 @@ def update_editing_panel(screen: Screen) -> None:
     except Exception:
         editing_type = "Typ objektu nenalezen"
 
-    screen.lfr_editing.configure(text=f"Detaily objektu: {editing_name}")
+    lfr_editing.configure(text=f"Detaily objektu: {editing_name}")
     screen.lbl_editing_type.configure(text=f"Typ objektu: {editing_type}")
     screen.lbl_editing_name.configure(text=f"Jméno objektu: {editing_name}")
 
     # Plot the editing panel for this item
-    lfr_editing = screen.lfr_editing
+    if not constants.last_editing_frame == None:
+        constants.last_editing_frame.grid_forget()
+    
     frm_generated = editing_item.get_editing_frame() # This will have it generated or receive the already generated one
     frm_generated.grid()
+    constants.last_editing_frame = frm_generated
     
 def choose_selection_mode(event_, mode) -> None: # Is run whenever the ComboBox is used
     mode = ["SINGLE", "MULTI", "LINES"][mode] # This is the first time I've used, or, well, even seen this notation. Neat!

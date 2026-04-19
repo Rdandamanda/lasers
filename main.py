@@ -84,7 +84,7 @@ if __name__ == "__main__":
     lbl_editing_name = tk.Label(master=lfr_editing, width=30, text="Jméno objektu: (nevybráno)")
     lbl_editing_name.grid(pady=(10, 0))
     sep_editing_pane = ttk.Separator(master=lfr_editing)
-    sep_editing_pane.grid()
+    sep_editing_pane.grid(sticky="ew", padx=7, pady=7)
 
     grp_grip_right = ttk.Sizegrip(master=frm_editing)
     grp_grip_right.grid(column=0, row=1, sticky="se")
@@ -102,10 +102,7 @@ if __name__ == "__main__":
         # Populating it with objects
         for source in create_ray_star(300, 140, 90, 64):
             startup_Screen.ray_sources.append(source)
-        startup_Screen.ray_interactors.append(o := Glass_Rectangle(startup_Screen, 200, 200, 500, 220))
-        #startup_Screen.tk_canvas.tag_bind(o.canvas_rectangle, "<Enter>", on_enter)
-        del o
-        #startup_Screen.ray_interactors.append(Glass_Rectangle(startup_Screen, 50, 50, 75, 75))
+        startup_Screen.ray_interactors.append(Glass_Rectangle(startup_Screen, 200, 200, 500, 220))
 
         # Solve and draw
         startup_Screen.solve_all_sources()
