@@ -45,11 +45,7 @@ def load_a_screen(notebook: ttk.Notebook, neccessary_references: dict) -> None:
         print(f"Reading file {file}: {loaded_dict}")
 
     # Make, Configure
-    new_screen = Screen(neccessary_references=neccessary_references)
-    notebook.add(new_screen.tk_frame, text=loaded_dict["tab_title"])
-    bg_colour = loaded_dict["bg"]
-    if not bg_colour == None:
-        new_screen.tk_canvas.configure(bg=bg_colour)
+    new_screen = create_screen(notebook=notebook, neccessary_references=neccessary_references, name=loaded_dict["tab_title"], color=loaded_dict["bg"])
 
     for interactor_dict in loaded_dict["ray_interactor_strings"]:
         interactor_dict: dict = loads(interactor_dict)
@@ -77,6 +73,8 @@ def load_a_screen(notebook: ttk.Notebook, neccessary_references: dict) -> None:
     # Update the screen to do the simulation and plot everything
     new_screen.solve_all_sources()
     new_screen.plot_all()
+    root.after(1000, new_screen.solve_all_sources)
+    root.after(1000, new_screen.plot_all)
 
 if __name__ == "__main__":
     # GUI setup
@@ -278,6 +276,13 @@ if __name__ == "__main__":
         startup_Screen3.plot_all_interactors()
         startup_Screen3.remove_all_lines()
         root.after(50, startup_Screen3.refresh_all_lines)
+    
+    def refresh_current_screen(event_):
+        screen = get_selected_screen(notebook=ntb_Screens)
+        screen.solve_all_sources()
+        screen.plot_all()
+    
+    ntb_Screens.bind("<<NotebookTabChanged>>", refresh_current_screen, add="+")
 
     root.after(250, fast_refresh_screen)
     root.after(500, fast_refresh_screen)
