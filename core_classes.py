@@ -78,11 +78,17 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
         return self._editing_frame
 
 class Source:
-    def __init__(self, x: int, y: int, angle: float) -> None:
+    def __init__(self, x: int, y: int, angle: float, editing_name: str ="Zdroj paprsku", editing_type: str = "Zdroj paprsku") -> None:
         self.x: int = x
         self.y: int = y
         self.angle: float = angle
         self.generated_segments: list[Segment] = []
+
+        # attributes specific to the editing panel
+        self._editing_name: str = f"{editing_name} #{id(self)}"
+        self.editing_type: str = editing_type
+        self._editing_frame_generated: bool = False
+        self._editing_frame: None | tk.Frame = None
     def __str__(self) -> str:
         return f"Source with X: {self.x} Y: {self.y} Angle: {self.angle} Number of segments: {len(self.generated_segments)}"
     def generate_segments(self, parent_screen: Screen) -> None: # Alters self.generated_segments. This function is a bit of a mess, but it is commented and isn't too bad
@@ -131,6 +137,19 @@ class Source:
                                 #print(vars(s))
                     break
             solving_index += 1 # Goes to the next Segment
+    
+    def move(self, x, y) -> None:
+        self.x += x
+        self.y += y
+        #if self._editing_frame_generated:
+        #    self.lbl_coordinates.configure(text=f"Souřadnice: X:{self.x} Y:{-self.y}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner)
+    def _generate_editing_frame(self) -> None:
+        self._editing_frame = tk.Frame()
+    def get_editing_frame(self) -> tk.Frame:
+        if not self._editing_frame_generated:
+            self._generate_editing_frame()
+        
+        return self._editing_frame
 
 class Screen:
     def __init__(self, neccessary_references: dict, canvas_width: int =1200, canvas_height: int =400):
@@ -153,6 +172,7 @@ class Screen:
 
         # Linking internal objects to canvas objects
         self.ID_to_interactor_dict: dict = {}
+        self.ID_to_source_dict: dict = {}
 
         # Unpack neccessary references dictionary
         self.lbl_debug: tk.Label = neccessary_references["lbl_debug"]
@@ -178,15 +198,18 @@ class Screen:
     def plot_all_lines(self) -> None:
         for canvas_object in self.tk_canvas.find_withtag("line"):
             self.tk_canvas.delete(canvas_object)
+        
+        # Update and generate the sources lookup dictionary and the lines for locating them on the canvas
+        self.ID_to_source_dict = {}
+        for source in self.ray_sources:
+            id = self.tk_canvas.create_line(source.x, source.y, source.x, source.y, fill="red", tags=["source_marker", "line"])
+            self.ID_to_source_dict[id] = source
 
         for source in self.ray_sources:
             render_segments(self.tk_canvas, source.generated_segments)
     def remove_all_lines(self) -> None:
         for canvas_object in self.tk_canvas.find_withtag("line"):
             self.tk_canvas.delete(canvas_object)
-    def refresh_all_lines(self) -> None:
-        for source in self.ray_sources:
-            render_segments(self.tk_canvas, source.generated_segments)
     def plot_all(self) -> None:
         self.plot_all_interactors()
         self.plot_all_lines()
@@ -255,7 +278,7 @@ def update_debug_label(event_, screen: Screen) -> None: # Does the counting for 
         screen.lbl_debug.configure(text=f"[Total:{str( len(all_IDs) ).rjust(constants.justify_digits)}] Lines:{str( counts['line'] ).rjust(constants.justify_digits)} | Rectangles:{str( counts['rectangle'] ).rjust(constants.justify_digits)} | Other:{str( counts['other'] ).rjust(constants.justify_digits)}")
 
 def update_editing_panel(screen: Screen) -> None:
-    editing_item: Interactor | Segment = constants.editing_item
+    editing_item: Interactor | Source = constants.editing_item
     lfr_editing = screen.lfr_editing
     if editing_item == None:
         # Set all the texts to preset "unset" texts

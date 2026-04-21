@@ -35,8 +35,8 @@ def get_mouse_selected(event: Event, screen: Screen) -> list[int]:
     answer = []
     for id in overlapping:
         if selection_mode == "LINES":
-            # Filter answer to only include lines
-            if screen.tk_canvas.type(id) == "line":
+            # Filter answer to only include lines that are source markers
+            if screen.tk_canvas.type(id) == "line" and ("source_marker" in screen.tk_canvas.gettags(id)):
                 answer.append(id)
         else:
             # Filter answer to only include rectangles # TODO: Make this work off of the tag system instead, since some interactors will not be rectangles
@@ -80,7 +80,10 @@ def on_mouse_grab(event: Event, screen: Screen) -> None: # Updates variables in 
                     constants.selected_internal_objects.append( screen.ID_to_interactor_dict[id] )
                 constants.editing_item = constants.selected_internal_objects[-1] # The topmost one in the canvas draw order
             case "LINES":
-                pass # TODO: Implement lines
+                for id in constants.selected_item_IDs:
+                    constants.selected_internal_objects.append(screen.ID_to_source_dict[id])
+                    #print(screen.ID_to_source_dict[id])
+                constants.editing_item = constants.selected_internal_objects[0]
             case _:
                 raise Exception("Selection mode does not match expected cases")
 

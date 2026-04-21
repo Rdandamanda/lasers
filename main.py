@@ -110,7 +110,7 @@ if __name__ == "__main__":
     lbl_selection_label = tk.Label(master=frm_toolbar, text="Režim výběru: ")
     lbl_selection_label.grid(row=0, column=0, padx=(3, 0), pady=3)
     var_selection_mode = tk.StringVar()
-    cbb_selection_mode = ttk.Combobox(master=frm_toolbar, values=["Vrchní objekt", "Všechny pod kurzorem", "Segmenty čar"], state="readonly", textvariable=var_selection_mode)
+    cbb_selection_mode = ttk.Combobox(master=frm_toolbar, values=["Vrchní objekt", "Všechny pod kurzorem", "Zdroje světla"], state="readonly", textvariable=var_selection_mode)
     cbb_selection_mode.grid(row=0, column=1, padx=(3, 0), pady=3)
     cbb_selection_mode.bind("<<ComboboxSelected>>", lambda event_: choose_selection_mode(event_, cbb_selection_mode.current()))
     cbb_selection_mode.current(0) # Set the default value as the first in the list
@@ -260,22 +260,22 @@ if __name__ == "__main__":
         startup_Screen.solve_all_sources()
         startup_Screen.plot_all_interactors()
         startup_Screen.remove_all_lines()
-        root.after(50, startup_Screen.refresh_all_lines)
+        root.after(50, startup_Screen.plot_all_lines)
         
         startup_Screen1.solve_all_sources()
         startup_Screen1.plot_all_interactors()
         startup_Screen1.remove_all_lines()
-        root.after(50, startup_Screen1.refresh_all_lines)
+        root.after(50, startup_Screen1.plot_all_lines)
         
         startup_Screen2.solve_all_sources()
         startup_Screen2.plot_all_interactors()
         startup_Screen2.remove_all_lines()
-        root.after(50, startup_Screen2.refresh_all_lines)
+        root.after(50, startup_Screen2.plot_all_lines)
         
         startup_Screen3.solve_all_sources()
         startup_Screen3.plot_all_interactors()
         startup_Screen3.remove_all_lines()
-        root.after(50, startup_Screen3.refresh_all_lines)
+        root.after(50, startup_Screen3.plot_all_lines)
     
     def refresh_current_screen(event_):
         screen = get_selected_screen(notebook=ntb_Screens)
