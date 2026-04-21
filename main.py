@@ -71,6 +71,7 @@ def load_a_screen(notebook: ttk.Notebook, neccessary_references: dict) -> None:
             new_screen.ray_interactors.append(new_interactor)
 
     for source_dict in loaded_dict["ray_source_strings"]:
+        source_dict: dict = loads(source_dict)
         new_screen.ray_sources.append(Source(source_dict["x"], source_dict["y"], source_dict["angle"]))
 
     # Update the screen to do the simulation and plot everything

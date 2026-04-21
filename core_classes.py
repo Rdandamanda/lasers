@@ -191,13 +191,16 @@ class Screen:
         self.plot_all_interactors()
         self.plot_all_lines()
     def make_dict(self) -> dict:
+        # Dictionary keys
         return_dict: dict = {}
         return_dict["bg"] = None
         return_dict["ray_source_strings"] = []
         return_dict["ray_interactor_strings"] = []
 
+        # Own attributes
         return_dict["bg"] = self.tk_canvas.cget("bg")
 
+        # Interactors
         for interactor in self.ray_interactors:
             new_dict = {}
             
@@ -207,6 +210,7 @@ class Screen:
             new_dict["y1"] = interactor.y1
             new_dict["editing_name"] = interactor.get_editing_name()
 
+            # This is just for the interactor type
             match str(type(interactor)):
                 case "<class 'default_interactors.Glass_Rectangle'>":
                     new_dict["type"] = "Glass_Rectangle"
@@ -217,6 +221,16 @@ class Screen:
                         print("WARN: Unknown interactor type, not saving the object")
                     
             return_dict["ray_interactor_strings"].append(dumps(new_dict))
+        
+        # Sources
+        for source in self.ray_sources:
+            new_dict = {}
+            
+            new_dict["x"] = source.x
+            new_dict["y"] = source.y
+            new_dict["angle"] = source.angle
+            
+            return_dict["ray_source_strings"].append(dumps(new_dict))
 
         return return_dict
 
