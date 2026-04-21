@@ -34,6 +34,41 @@ def create_item(notebook: ttk.Notebook, item_type: str, item_shape: str) -> None
     screen.solve_all_sources()
     screen.plot_all()
 
+def load_a_screen(notebook: ttk.Notebook, neccessary_references: dict) -> None:
+    file = askopenfile()
+    if file == None:
+        return
+    
+    # Read file to get dictionary back
+    with file:
+        loaded_dict = loads(file.read())
+        print(f"Reading file {file}: {loaded_dict}")
+
+    # Make, Configure
+    new_screen = Screen(neccessary_references=neccessary_references)
+    notebook.add(new_screen.tk_frame, text=loaded_dict["tab_title"])
+    new_screen.tk_canvas.configure(bg=loaded_dict["bg"])
+
+    for interactor_dict in loaded_dict["ray_interactor_strings"]:
+        interactor_dict: dict = loads(interactor_dict)
+        x0 = interactor_dict["x0"]
+        y0 = interactor_dict["y0"]
+        x1 = interactor_dict["x1"]
+        y1 = interactor_dict["y1"]
+        editing_name = interactor_dict["editing_name"]
+        if interactor_dict["type"] == "Glass_Rectangle":
+            new_interactor = Glass_Rectangle(parent_screen=new_screen, x0=x0, y0=y0, x1=x1, y1=y1, editing_name=editing_name)
+        if interactor_dict["type"] == "Obstacle_Rectangle":
+            new_interactor = Obstacle_Rectangle(parent_screen=new_screen, x0=x0, y0=y0, x1=x1, y1=y1, editing_name=editing_name)
+        new_screen.ray_interactors.append(new_interactor)
+
+    for source_dict in loaded_dict["ray_source_strings"]:
+        new_screen.ray_sources.append(Source(source_dict["x"], source_dict["y"], source_dict["angle"]))
+
+    # Update the screen to do the simulation and plot everything
+    new_screen.solve_all_sources()
+    new_screen.plot_all()
+
 if __name__ == "__main__":
     # GUI setup
     root = tk.Tk()
@@ -156,7 +191,7 @@ if __name__ == "__main__":
 
     # The window is now ready for getting and adding Screens
     mnu_soubor.add_command(label="Uložit", command=lambda: save_current_screen(notebook=ntb_Screens))
-    mnu_soubor.add_command(label="Načíst", command=lambda: load_a_screen(notebook=ntb_Screens))
+    mnu_soubor.add_command(label="Načíst", command=lambda: load_a_screen(notebook=ntb_Screens, neccessary_references=screen_dict))
     mnu_plochy.add_command(label="Přidat plochu", command=lambda: run_screen_adding(notebook=ntb_Screens, neccessary_references=screen_dict)) # This lambda function can now be configured properly, that's why this is all the way here
     mnu_plochy.add_command(label="Odstranit plochu", command=lambda: run_screen_deletion(notebook=ntb_Screens))
 

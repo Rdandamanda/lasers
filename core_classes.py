@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk # Just for one type annotation and a Combobox
 from tkinter.filedialog import askopenfile, asksaveasfile
 from math import tan, radians
+from json import dumps, loads
 
 def do_os_check() -> None: # Vytvořit z toho funkci mi poradil Ondra, je to aby os byl lokální symbol, definovaný jenom pro tuhle funkci a ne pro celý program
     import os
@@ -186,10 +187,18 @@ class Screen:
     def refresh_all_lines(self) -> None:
         for source in self.ray_sources:
             render_segments(self.tk_canvas, source.generated_segments)
-
     def plot_all(self) -> None:
         self.plot_all_interactors()
         self.plot_all_lines()
+    def make_dict(self) -> dict:
+        return_dict: dict = {}
+        return_dict["bg"] = None
+        return_dict["ray_source_strings"] = []
+        return_dict["ray_interactor_strings"] = []
+
+        return_dict["bg"] = self.tk_canvas.cget("bg")
+
+        return return_dict
 
 def update_debug_label(event_, screen: Screen) -> None: # Does the counting for the given screen and updates the lbl_debug of the given screen
     # Count objects and their types
@@ -399,23 +408,19 @@ def get_selected_screen(notebook: ttk.Notebook) -> Screen:
     return constants.frame_UUID_to_Screen_dict[id(frm)]
 
 def save_current_screen(notebook: ttk.Notebook) -> None:
+    # Get the Screen and a file
     scrn = get_selected_screen(notebook=notebook)
     file = asksaveasfile()
     if file == None:
         return
     
+    # Get the screen's dictionary, serialise it and print it into the file
+    dictionary = scrn.make_dict()
+    dictionary["tab_title"] = notebook.tab(notebook.select(), option="text")
+    string = dumps(dictionary)
+    print(string)
     with file:
-        print(repr(scrn), file=file)
-
-def load_a_screen(notebook: ttk.Notebook) -> None:
-    scrn = get_selected_screen(notebook=notebook)
-    file = askopenfile()
-    if file == None:
-        return
-    
-    with file:
-        print(f"Reading file {file}:")
-        print(file.read())
+        print(string, file=file)
 
 if __name__ == "__main__": # For testing the layout of the two Toplevel windows
     root = tk.Tk()
