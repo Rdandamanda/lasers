@@ -29,8 +29,9 @@ def create_item(notebook: ttk.Notebook, item_type: str, item_shape: str) -> None
             screen.ray_interactors.append(Glass_Rectangle(screen, x0, y0, x1, y1))
         case "Překážka":
             screen.ray_interactors.append(Obstacle_Rectangle(screen, x0, y0, x1, y1))
-        case "Zdroj jednoho paprsku":
-            screen.ray_sources.append(Source(x=100, y=100, angle=0))
+        case "Zdroj 4 paprsků":
+            for source in create_ray_star(100, 100, 45, 4):
+                screen.ray_sources.append(source)
         case "Zdroj 8 paprsků":
             for source in create_ray_star(100, 100, 0, 8):
                 screen.ray_sources.append(source)
@@ -142,7 +143,7 @@ if __name__ == "__main__":
     lbl_item_type = tk.Label(master=frm_toolbar, text="Přidávání objektu:")
     lbl_item_type.grid(row=0, column=5)
     var_item_type = tk.StringVar()
-    cbb_item_type = ttk.Combobox(master=frm_toolbar, values=["Zrcadlo", "Překážka", "Zdroj jednoho paprsku", "Zdroj 8 paprsků", "Zdroj 16 paprsků", "Zdroj 32 paprsků", "Zdroj 64 paprsků"], state="readonly", textvariable=var_item_type)
+    cbb_item_type = ttk.Combobox(master=frm_toolbar, values=["Zrcadlo", "Překážka", "Zdroj 4 paprsků", "Zdroj 8 paprsků", "Zdroj 16 paprsků", "Zdroj 32 paprsků", "Zdroj 64 paprsků"], state="readonly", textvariable=var_item_type)
     cbb_item_type.grid(row=0, column=6, padx=(3, 0), pady=3)
     #cbb_item_type.bind("<<ComboboxSelected>>", lambda event_: choose_selection_mode(event_, cbb_selection_mode.current()))
     cbb_item_type.current(0) # Set the default value as the first in the list
