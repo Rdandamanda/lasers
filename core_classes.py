@@ -77,8 +77,15 @@ class Interactor: # Generic parent class that doesn't hold any functionality in 
         
         return self._editing_frame
 
+# Spaghetti code... :(
+def delete_selected_sources() -> None:
+    print(constants.selected_internal_objects)
+    for source in constants.selected_internal_objects:
+        print(source)
+        del source
+
 class Source:
-    def __init__(self, x: int, y: int, angle: float, editing_name: str ="Zdroj paprsku", editing_type: str = "Zdroj paprsku") -> None:
+    def __init__(self, x: int, y: int, angle: float, editing_name: str ="Zdroj", editing_type: str = "Zdroj paprsku") -> None:
         self.x: int = x
         self.y: int = y
         self.angle: float = angle
@@ -89,6 +96,7 @@ class Source:
         self.editing_type: str = editing_type
         self._editing_frame_generated: bool = False
         self._editing_frame: None | tk.Frame = None
+        self.flagged_for_deletion: bool = False
     def __str__(self) -> str:
         return f"Source with X: {self.x} Y: {self.y} Angle: {self.angle} Number of segments: {len(self.generated_segments)}"
     def generate_segments(self, parent_screen: Screen) -> None: # Alters self.generated_segments. This function is a bit of a mess, but it is commented and isn't too bad
@@ -137,19 +145,35 @@ class Source:
                                 #print(vars(s))
                     break
             solving_index += 1 # Goes to the next Segment
-    
     def move(self, x, y) -> None:
         self.x += x
         self.y += y
-        #if self._editing_frame_generated:
-        #    self.lbl_coordinates.configure(text=f"Souřadnice: X:{self.x} Y:{-self.y}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner)
-    def _generate_editing_frame(self) -> None:
-        self._editing_frame = tk.Frame()
-    def get_editing_frame(self) -> tk.Frame:
+        if self._editing_frame_generated:
+            self.lbl_coordinates.configure(text=f"Souřadnice: X:{self.x} Y:{-self.y}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner)
+    def delete(self): # Currently unused
+        self.flagged_for_deletion: bool = True
+    def _generate_editing_frame(self, labelframe: tk.LabelFrame) -> None:
+        self._editing_frame = tk.Frame(master=labelframe)
+        frm = self._editing_frame # Shorthand
+
+        # Coordinates label
+        self.lbl_coordinates = tk.Label(master=frm, text=f"Souřadnice: X:{self.x} Y:{-self.y}") # Minus because I don't fell like explaining to the user why the y is flipped and counted from the top left corner
+        self.lbl_coordinates.grid(row=0, column=0)
+
+        # Deletion button
+        #self.btn_deletion = tk.Button(master=frm, text="   Smazat objekt   ", command=self.delete)
+        #self.btn_deletion.grid(row=4, column=0)
+
+        self._editing_frame_generated = True
+    def get_editing_frame(self, labelframe) -> tk.Frame:
         if not self._editing_frame_generated:
-            self._generate_editing_frame()
+            self._generate_editing_frame(labelframe=labelframe)
         
         return self._editing_frame
+    def get_editing_name(self) -> str: # The name that should show up in the editing panel
+        return self._editing_name
+    def get_editing_type(self) -> str: # The type name that should show up in the editing panel
+        return self.editing_type
 
 class Screen:
     def __init__(self, neccessary_references: dict, canvas_width: int =1200, canvas_height: int =400):
@@ -202,7 +226,7 @@ class Screen:
         # Update and generate the sources lookup dictionary and the lines for locating them on the canvas
         self.ID_to_source_dict = {}
         for source in self.ray_sources:
-            id = self.tk_canvas.create_line(source.x, source.y, source.x, source.y, fill="red", tags=["source_marker", "line"])
+            id = self.tk_canvas.create_line(source.x, source.y, source.x, source.y, fill="", tags=["source_marker", "line"])
             self.ID_to_source_dict[id] = source
 
         for source in self.ray_sources:
@@ -309,7 +333,7 @@ def update_editing_panel(screen: Screen) -> None:
     if not constants.last_editing_frame == None:
         constants.last_editing_frame.grid_forget()
     
-    frm_generated = editing_item.get_editing_frame() # This will have it generated or receive the already generated one
+    frm_generated = editing_item.get_editing_frame(lfr_editing) # This will have it generated or receive the already generated one
     frm_generated.grid()
     constants.last_editing_frame = frm_generated
     

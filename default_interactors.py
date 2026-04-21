@@ -95,8 +95,8 @@ class Glass_Rectangle(Interactor):
         self.parent_screen.plot_all()
         if constants.debug_editing:
             print(f"Worked, newly: {self.var_width.get()}, {self.var_height.get(), 1}")
-    def _generate_editing_frame(self) -> None:
-        self._editing_frame = tk.Frame(master=self.parent_screen.lfr_editing)
+    def _generate_editing_frame(self, labelframe) -> None:
+        self._editing_frame = tk.Frame(master=labelframe)
         frm = self._editing_frame # Shorthand
         if constants.debug_background_colors:
             frm.configure(background="green")
@@ -130,9 +130,9 @@ class Glass_Rectangle(Interactor):
         self.btn_deletion.grid(row=4, column=0, columnspan=2)
 
         self._editing_frame_generated = True
-    def get_editing_frame(self) -> tk.Frame:
+    def get_editing_frame(self, labelframe) -> tk.Frame:
         if not self._editing_frame_generated:
-            self._generate_editing_frame()
+            self._generate_editing_frame(labelframe=labelframe)
         
         return self._editing_frame
 
@@ -227,8 +227,8 @@ class Obstacle_Rectangle(Interactor):
         self.parent_screen.plot_all()
         if constants.debug_editing:
             print(f"Worked, newly: {self.var_width.get()}, {self.var_height.get(), 1}")
-    def _generate_editing_frame(self) -> None:
-        self._editing_frame = tk.Frame(master=self.parent_screen.lfr_editing)
+    def _generate_editing_frame(self, labelframe) -> None:
+        self._editing_frame = tk.Frame(master=labelframe)
         frm = self._editing_frame # Shorthand
         if constants.debug_background_colors:
             frm.configure(background="green")
@@ -262,8 +262,8 @@ class Obstacle_Rectangle(Interactor):
         self.btn_deletion.grid(row=4, column=0, columnspan=2)
 
         self._editing_frame_generated = True
-    def get_editing_frame(self) -> tk.Frame:
+    def get_editing_frame(self, labelframe) -> tk.Frame:
         if not self._editing_frame_generated:
-            self._generate_editing_frame()
+            self._generate_editing_frame(labelframe=labelframe)
         
         return self._editing_frame
