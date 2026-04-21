@@ -47,7 +47,9 @@ def load_a_screen(notebook: ttk.Notebook, neccessary_references: dict) -> None:
     # Make, Configure
     new_screen = Screen(neccessary_references=neccessary_references)
     notebook.add(new_screen.tk_frame, text=loaded_dict["tab_title"])
-    new_screen.tk_canvas.configure(bg=loaded_dict["bg"])
+    bg_colour = loaded_dict["bg"]
+    if not bg_colour == None:
+        new_screen.tk_canvas.configure(bg=bg_colour)
 
     for interactor_dict in loaded_dict["ray_interactor_strings"]:
         interactor_dict: dict = loads(interactor_dict)
@@ -56,11 +58,17 @@ def load_a_screen(notebook: ttk.Notebook, neccessary_references: dict) -> None:
         x1 = interactor_dict["x1"]
         y1 = interactor_dict["y1"]
         editing_name = interactor_dict["editing_name"]
-        if interactor_dict["type"] == "Glass_Rectangle":
-            new_interactor = Glass_Rectangle(parent_screen=new_screen, x0=x0, y0=y0, x1=x1, y1=y1, editing_name=editing_name)
-        if interactor_dict["type"] == "Obstacle_Rectangle":
-            new_interactor = Obstacle_Rectangle(parent_screen=new_screen, x0=x0, y0=y0, x1=x1, y1=y1, editing_name=editing_name)
-        new_screen.ray_interactors.append(new_interactor)
+        match interactor_dict["type"]:
+            case "Glass_Rectangle":
+                new_interactor = Glass_Rectangle(parent_screen=new_screen, x0=x0, y0=y0, x1=x1, y1=y1, editing_name=editing_name)
+            case "Obstacle_Rectangle":
+                new_interactor = Obstacle_Rectangle(parent_screen=new_screen, x0=x0, y0=y0, x1=x1, y1=y1, editing_name=editing_name)
+            case _:
+                new_interactor = None
+                if constants.debug_warnings:
+                    print("WARN: Unknown interactor type, not creating the object")
+        if new_interactor != None:
+            new_screen.ray_interactors.append(new_interactor)
 
     for source_dict in loaded_dict["ray_source_strings"]:
         new_screen.ray_sources.append(Source(source_dict["x"], source_dict["y"], source_dict["angle"]))

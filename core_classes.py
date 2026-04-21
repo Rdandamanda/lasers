@@ -198,6 +198,26 @@ class Screen:
 
         return_dict["bg"] = self.tk_canvas.cget("bg")
 
+        for interactor in self.ray_interactors:
+            new_dict = {}
+            
+            new_dict["x0"] = interactor.x0
+            new_dict["y0"] = interactor.y0
+            new_dict["x1"] = interactor.x1
+            new_dict["y1"] = interactor.y1
+            new_dict["editing_name"] = interactor.get_editing_name()
+
+            match str(type(interactor)):
+                case "<class 'default_interactors.Glass_Rectangle'>":
+                    new_dict["type"] = "Glass_Rectangle"
+                case "<class 'default_interactors.Obstacle_Rectangle'>":
+                    new_dict["type"] = "Obstacle_Rectangle"
+                case _:
+                    if constants.debug_warnings:
+                        print("WARN: Unknown interactor type, not saving the object")
+                    
+            return_dict["ray_interactor_strings"].append(dumps(new_dict))
+
         return return_dict
 
 def update_debug_label(event_, screen: Screen) -> None: # Does the counting for the given screen and updates the lbl_debug of the given screen
