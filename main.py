@@ -21,6 +21,9 @@ def create_item(notebook: ttk.Notebook, item_type: str, item_shape: str) -> None
         case "Čtvercový":
             x1 = x0 + 100
             y1 = y0 + 100
+        case "Konfety":
+            x1 = x0 + 1
+            y1 = y0 + 1
         case _:
             raise Exception("Item shape does not match expected cases")
 
@@ -151,7 +154,7 @@ if __name__ == "__main__":
     lbl_item_shape = tk.Label(master=frm_toolbar, text="; Tvar objektu:")
     lbl_item_shape.grid(row=0, column=7)
     var_item_shape = tk.StringVar()
-    cbb_item_shape = ttk.Combobox(master=frm_toolbar, values=["Tenký vodorovný", "Tenký svislý", "Čtvercový"], state="readonly", textvariable=var_item_shape)
+    cbb_item_shape = ttk.Combobox(master=frm_toolbar, values=["Tenký vodorovný", "Tenký svislý", "Čtvercový", "Konfety"], state="readonly", textvariable=var_item_shape)
     cbb_item_shape.grid(row=0, column=8, padx=(3, 0), pady=3)
     #cbb_item_type.bind("<<ComboboxSelected>>", lambda event_: choose_selection_mode(event_, cbb_selection_mode.current()))
     cbb_item_shape.current(0) # Set the default value as the first in the list
@@ -196,6 +199,8 @@ if __name__ == "__main__":
     pnw_panes.add(frm_editing, weight=0)
 
     lfr_editing = tk.LabelFrame(master=frm_editing, text="Detaily objektu")
+    lfr_editing.columnconfigure(0, weight=1)
+    lfr_editing.rowconfigure(3, weight=1)
     lfr_editing.grid(sticky="nsew", padx=(0, 5))
 
     lbl_editing_type = tk.Label(master=lfr_editing, width=30, text="Typ objektu: (nevybráno)")
@@ -304,6 +309,7 @@ if __name__ == "__main__":
     
     btn_refresh.configure(command=refresh_screen)
     
+    root.bind("<Configure>", lambda _: root.update())
     root.mainloop()
     if constants.debug_exiting:
         print(constants.exit_message)
